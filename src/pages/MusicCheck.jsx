@@ -1,9 +1,52 @@
+import { useContext } from "react";
+import Form from "../elements/Form";
+import { PlaylistContext } from "../context/PlaylistContext";
+import { PlayerModeContext } from "../context/PlayerModeContext";
+
 const MusicCheck = () => {
-    return (
-        <>
-        MusicCheck    
-        </>
-    )
+  const { setPlaylistContext } = useContext(PlaylistContext);
+const {PlayerMode, setPlayerMode} = useContext(PlayerModeContext);
+
+  const formarray = [
+    {
+      id: 1,
+      element: "label",
+      text: "Test Song",
+    },
+    {
+      id: 2,
+      element: "input",
+      type: "url",
+      name: "url",
+      placeholder: "Musik-URL",
+    },
+  ];
+
+function onSubmit(e) {
+  e.preventDefault();
+
+  const url = e.target.elements.url.value;
+    setPlayerMode("test")
+  setPlaylistContext([
+    {
+      url: url,
+      id: 0,
+      list: false,
+    },
+  ]);
+}
+
+  return (
+    <>
+      <Form
+        submitFunction={onSubmit}
+        text="Musik überprüfen"
+        id="music-check-form"
+        className={""}
+        formarray={formarray}
+      />
+    </>
+  );
 };
 
 export default MusicCheck;

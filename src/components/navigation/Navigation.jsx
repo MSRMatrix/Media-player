@@ -1,11 +1,11 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Navigation = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  function navigateFunction(e, path){
-    
-   navigate(`/${path}`)
+  function navigateFunction(e) {
+    navigate(`/${e.target.value}`);
   }
 
   const navArray = [
@@ -38,13 +38,21 @@ const Navigation = () => {
       name: "Youtube",
     },
   ];
+
   return (
     <>
-      <ul>
+      <div>
         {navArray.map((item) => (
-          <li key={item.name} value={item.name} onClick={(e) => navigateFunction(e, item.path)}>{item.name}</li>
+          <button
+            key={item.name}
+            disabled={location.pathname === `/${item.path}`}
+            value={item.path}
+            onClick={(e) => navigateFunction(e)}
+          >
+            {item.name}
+          </button>
         ))}
-      </ul>
+      </div>
     </>
   );
 };
