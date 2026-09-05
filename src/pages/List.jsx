@@ -1,7 +1,7 @@
 const List = () => {
     return (
         <>
-            
+            List
         </>
     )
 };
