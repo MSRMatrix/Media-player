@@ -14,7 +14,7 @@ import { PlayerModeContext } from "./context/PlayerModeContext";
 
 function App() {
   const [playlistContext, setPlaylistContext] = useState([]);
-const [PlayerMode, setPlayerMode] = useState(null);
+const [playerMode, setPlayerMode] = useState(null);
 
   const router = createBrowserRouter([
     {
@@ -58,7 +58,7 @@ const [PlayerMode, setPlayerMode] = useState(null);
   ]); 
   return (
     <>
-      <PlayerModeContext.Provider value={{PlayerMode, setPlayerMode}}>
+      <PlayerModeContext.Provider value={{playerMode, setPlayerMode}}>
         <PlaylistContext.Provider value={{ playlistContext, setPlaylistContext }}>
           <RouterProvider router={router} />
         </PlaylistContext.Provider>
