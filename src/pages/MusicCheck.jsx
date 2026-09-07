@@ -5,7 +5,7 @@ import { PlayerModeContext } from "../context/PlayerModeContext";
 
 const MusicCheck = () => {
   const { setPlaylistContext } = useContext(PlaylistContext);
-const {setPlayerMode} = useContext(PlayerModeContext);
+  const { setPlayerMode } = useContext(PlayerModeContext);
 
   const formarray = [
     {
@@ -22,35 +22,41 @@ const {setPlayerMode} = useContext(PlayerModeContext);
     },
   ];
 
-async function onSubmit(e) {
-  e.preventDefault();
+  async function onSubmit(e) {
+    e.preventDefault();
 
-  const url = e.target.elements.url.value;
+    const url = e.target.elements.url.value;
 
-  try {
-    const urlObject = new URL(url);
-    const playlistId = urlObject.searchParams.get("list");
+    try {
+      const urlObject = new URL(url);
+      const playlistId = urlObject.searchParams.get("list");
 
-    // Playlist
-    if (playlistId) {
-      console.log("Playlist erkannt:", playlistId);
-    }
+      // Playlist
+      // if (playlistId) {
+      //   console.log("Playlist erkannt:", playlistId);
+      // }
 
-    // Einzelnes Video
-    setPlayerMode("test");
+      // Einzelnes Video
 
-    setPlaylistContext(
-      {
+      setTimeout(() => {
+        setPlayerMode((prev) => ({
+        ...prev,
+        play: true,
+        mode: "test",
+      }));
+      }, 50);
+      
+
+      setPlaylistContext({
         name: "",
         url: url,
         id: 0,
-      },
-    );
-// Array klammern um den context für spätere List Ideen
-  } catch (error) {
-    console.log("Ungültige URL:", error);
+      });
+      // Array klammern um den context für spätere List Ideen
+    } catch (error) {
+      console.log("Ungültige URL:", error);
+    }
   }
-}
 
   return (
     <>

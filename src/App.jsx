@@ -14,7 +14,11 @@ import { PlayerModeContext } from "./context/PlayerModeContext";
 
 function App() {
   const [playlistContext, setPlaylistContext] = useState([]);
-const [playerMode, setPlayerMode] = useState(null);
+const [playerMode, setPlayerMode] = useState({
+  mode: "",
+  play: false,
+  
+});
 
   const router = createBrowserRouter([
     {
