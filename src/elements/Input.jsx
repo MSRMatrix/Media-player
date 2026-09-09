@@ -1,4 +1,4 @@
-const Input = ({ text, classname, onChange, rangeValue }) => {
+const Input = ({ text, classname, onChange, rangeValue, min, max, step }) => {
   return (
     <div className={classname}>
       <label htmlFor="">{text || "N/A"}</label>
@@ -6,9 +6,9 @@ const Input = ({ text, classname, onChange, rangeValue }) => {
         type="range"
         name=""
         id=""
-        min={0}
-        max={1}
-        step={0.01}
+        min={min}
+        max={max}
+        step={step}
         value={rangeValue}
         onChange={(e) => onChange(e)}
       />

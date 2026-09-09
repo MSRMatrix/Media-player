@@ -8,10 +8,13 @@ import Input from "../../elements/Input";
 const Videoplayer = ({ checkStatus, setCheckStatus }) => {
   const { playerMode, setPlayerMode } = useContext(PlayerModeContext);
   const { playlistContext } = useContext(PlaylistContext);
-  //   PlayerMode und Status zusammenlegen
-  // Dinge wie Loop etc einfügen
+  const playerRef = useRef(null);
+
+  const [progress, setProgress] = useState(0);
+  const [duration, setDuration] = useState(0);
+
   const [videoTitle, setVideoTitle] = useState("");
-  const [volume, setVolume] = useState(0.5)
+  const [volume, setVolume] = useState(0.5);
   const currentSong = playlistContext;
 
   const playerButtons = [
@@ -23,12 +26,12 @@ const Videoplayer = ({ checkStatus, setCheckStatus }) => {
     {
       element: "button",
       id: !playerMode.play ? "play" : "pause",
-      text: !playerMode.play ?"Play" : "Pause",
+      text: !playerMode.play ? "Play" : "Pause",
       onClick: () =>
-  setPlayerMode((prev) => ({
-    ...prev,
-    play: !prev.play,
-  }))
+        setPlayerMode((prev) => ({
+          ...prev,
+          play: !prev.play,
+        })),
     },
     {
       element: "button",
@@ -40,20 +43,32 @@ const Videoplayer = ({ checkStatus, setCheckStatus }) => {
       id: "volume",
       text: "Volume",
       rangeValue: volume,
-       onChange: (e) => setVolume(Number(e.target.value)),
+      onChange: (e) => setVolume(Number(e.target.value)),
+      min: 0,
+      max: 1,
+      step: 0.01,
     },
     {
       element: "button",
       id: "mute",
       text: "Mute",
-      onClick: () => setVolume(volume === 0 ? 0.5 : 0)
+      onClick: () => setVolume(volume === 0 ? 0.5 : 0),
     },
-    {
-      element: "input",
-      id: "progress",
-      text: "Progress",
-      // onChange: "",
-    },
+{
+  element: "input",
+  id: "progress",
+  text: "Progress",
+  rangeValue: progress,
+  onChange: (e) => {
+    const value = Number(e.target.value);
+
+    setProgress(value);
+    playerRef.current?.api.seekTo(value, "seconds");
+  },
+  min: 0,
+  max: duration,
+  step: 0.1
+},
     {
       element: "button",
       id: "loop",
@@ -65,10 +80,6 @@ const Videoplayer = ({ checkStatus, setCheckStatus }) => {
       text: "Shuffle",
     },
   ];
-  console.log(playerMode.play);
-  
-  const playerRef = useRef(null);
-console.log(playerMode);
 
   return (
     <div ref={playerRef}>
@@ -81,7 +92,12 @@ console.log(playerMode);
           setVideoTitle(title);
           setCheckStatus("ready");
         }}
-
+        onDurationChange={(e) => {
+          setDuration(e.currentTarget.duration);
+        }}
+        onTimeUpdate={(e) => {
+          setProgress(e.currentTarget.currentTime);
+        }}
         playing={playerMode.play}
         onError={(error) => {
           setVideoTitle("");
@@ -89,12 +105,29 @@ console.log(playerMode);
           console.log("Fehler:", error);
         }}
       />
-      {playerButtons.map((item) => (
-        item.element === "button" ? (<Button text={item.text} key={item.id} classname={"button"} onClick={item.onClick} />)
-        : item.element === "input" ? (<Input rangeValue={item.rangeValue} text={item.text} key={item.id} classname={"button"} onChange={item.onChange} />)
-        : <></>
-        
-      ))}
+      {playerButtons.map((item) =>
+        item.element === "button" ? (
+          <Button
+            text={item.text}
+            key={item.id}
+            classname={"button"}
+            onClick={item.onClick}
+          />
+        ) : item.element === "input" ? (
+          <Input
+            min={item.min}
+            max={item.max}
+            step={item.step}
+            rangeValue={item.rangeValue}
+            text={item.text}
+            key={item.id}
+            classname={"button"}
+            onChange={item.onChange}
+          />
+        ) : (
+          <></>
+        ),
+      )}
       {playerMode.mode === "test" ? (
         <>{videoTitle && <h2>{videoTitle}</h2>}</>
       ) : (
