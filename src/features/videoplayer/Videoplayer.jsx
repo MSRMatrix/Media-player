@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import { PlaylistContext } from "../../context/PlaylistContext";
 import { PlayerModeContext } from "../../context/PlayerModeContext";
@@ -12,10 +12,19 @@ const Videoplayer = ({ checkStatus, setCheckStatus }) => {
 
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [playbackRate, setplayerbackRate] = useState(1);
 
   const [videoTitle, setVideoTitle] = useState("");
   const [volume, setVolume] = useState(0.5);
   const currentSong = playlistContext;
+
+  const changeTime = (e) => {
+    const value = Number(e.target.value);
+
+    setProgress(value);
+
+    playerRef.current?.api?.seekTo(value, "seconds");
+  };
 
   const playerButtons = [
     {
@@ -49,26 +58,30 @@ const Videoplayer = ({ checkStatus, setCheckStatus }) => {
       step: 0.01,
     },
     {
+      element: "input",
+      id: "rate",
+      text: "Rate",
+      rangeValue: playbackRate,
+      onChange: (e) => setplayerbackRate(Number(e.target.value)),
+      min: 0,
+      max: 4,
+      step: 0.25,
+    },
+    {
       element: "button",
       id: "mute",
       text: "Mute",
       onClick: () => setVolume(volume === 0 ? 0.5 : 0),
     },
-{
-  element: "input",
-  id: "progress",
-  text: "Progress",
-  rangeValue: progress,
-  onChange: (e) => {
-    const value = Number(e.target.value);
-
-    setProgress(value);
-    playerRef.current?.api.seekTo(value, "seconds");
-  },
-  min: 0,
-  max: duration,
-  step: 0.1
-},
+    {
+      element: "input",
+      id: "progress",
+      text: "Progress",
+      rangeValue: progress,
+      min: 0,
+      max: duration,
+      step: 0.1,
+    },
     {
       element: "button",
       id: "loop",
@@ -87,6 +100,7 @@ const Videoplayer = ({ checkStatus, setCheckStatus }) => {
         ref={playerRef}
         src={currentSong?.url}
         volume={volume}
+        playbackRate={playbackRate}
         onReady={() => {
           const title = playerRef.current?.api?.videoTitle;
           setVideoTitle(title);
@@ -122,7 +136,7 @@ const Videoplayer = ({ checkStatus, setCheckStatus }) => {
             text={item.text}
             key={item.id}
             classname={"button"}
-            onChange={item.onChange}
+            onChange={item.id === "progress" ? changeTime : item.onChange}
           />
         ) : (
           <></>

@@ -5,7 +5,7 @@ import { PlayerModeContext } from "../context/PlayerModeContext";
 
 const MusicCheck = () => {
   const { setPlaylistContext } = useContext(PlaylistContext);
-  const { setPlayerMode } = useContext(PlayerModeContext);
+  const { playerMode, setPlayerMode } = useContext(PlayerModeContext);
 
   const formarray = [
     {
@@ -40,18 +40,17 @@ const MusicCheck = () => {
 
       setTimeout(() => {
         setPlayerMode((prev) => ({
-        ...prev,
-        play: true,
-        mode: "test",
-      }));
+          ...prev,
+          play: true,
+          mode: "test",
+        }));
       }, 50);
-      
 
-      setPlaylistContext({
+      setPlaylistContext([{
         name: "",
         url: url,
         id: 0,
-      });
+      }]);
       // Array klammern um den context für spätere List Ideen
     } catch (error) {
       console.log("Ungültige URL:", error);
@@ -67,6 +66,10 @@ const MusicCheck = () => {
         className={""}
         formarray={formarray}
       />
+      {playerMode.mode === "test" ? 
+      <div>
+      test
+      </div> : <></>}
     </>
   );
 };

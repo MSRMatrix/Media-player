@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AppShell from "./layout/AppShell";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PlaylistContext } from "./context/PlaylistContext";
 import Home from "./pages/Home";
 import Lists from "./pages/Lists";
@@ -11,13 +11,36 @@ import MusicCheck from "./pages/MusicCheck";
 import Youtube from "./pages/Youtube";
 import NotFound from "./pages/NotFound";
 import { PlayerModeContext } from "./context/PlayerModeContext";
+import { LocaleStorageContext } from "./context/LocaleStorageContext";
 
 function App() {
   const [playlistContext, setPlaylistContext] = useState([]);
-const [playerMode, setPlayerMode] = useState({
-  mode: "",
-  play: false,
-  
+  const [playerMode, setPlayerMode] = useState({
+    mode: "",
+    play: false,
+  });
+
+const [localeStorageContext, setLocaleStorageContext] = useState(() => {
+  const savedPlaylist = localStorage.getItem("playlist");
+
+  if (savedPlaylist) {
+    return {
+      playlist: JSON.parse(savedPlaylist),
+    };
+  }
+
+  const initialPlaylist = {
+    
+      title: "Neue Playlist",
+      songs: [],
+    
+  };
+
+  localStorage.setItem("playlist", JSON.stringify(initialPlaylist));
+
+  return {
+    playlist: initialPlaylist,
+  };
 });
 
   const router = createBrowserRouter([
@@ -59,14 +82,20 @@ const [playerMode, setPlayerMode] = useState({
       path: "*",
       element: <NotFound />,
     },
-  ]); 
+  ]);
   return (
     <>
-      <PlayerModeContext.Provider value={{playerMode, setPlayerMode}}>
-        <PlaylistContext.Provider value={{ playlistContext, setPlaylistContext }}>
-          <RouterProvider router={router} />
-        </PlaylistContext.Provider>
-      </PlayerModeContext.Provider>
+      <LocaleStorageContext.Provider
+        value={{ localeStorageContext, setLocaleStorageContext }}
+      >
+        <PlayerModeContext.Provider value={{ playerMode, setPlayerMode }}>
+          <PlaylistContext.Provider
+            value={{ playlistContext, setPlaylistContext }}
+          >
+            <RouterProvider router={router} />
+          </PlaylistContext.Provider>
+        </PlayerModeContext.Provider>
+      </LocaleStorageContext.Provider>
     </>
   );
 }
