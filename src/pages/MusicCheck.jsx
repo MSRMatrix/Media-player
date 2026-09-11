@@ -2,10 +2,13 @@ import { useContext } from "react";
 import Form from "../elements/Form";
 import { PlaylistContext } from "../context/PlaylistContext";
 import { PlayerModeContext } from "../context/PlayerModeContext";
+import { LocaleStorageContext } from "../context/LocaleStorageContext";
 
 const MusicCheck = () => {
   const { setPlaylistContext } = useContext(PlaylistContext);
   const { playerMode, setPlayerMode } = useContext(PlayerModeContext);
+  const { localeStorageContext, setLocaleStorageContext } =
+    useContext(LocaleStorageContext);
 
   const formarray = [
     {
@@ -31,6 +34,9 @@ const MusicCheck = () => {
       const urlObject = new URL(url);
       const playlistId = urlObject.searchParams.get("list");
 
+      console.log(urlObject);
+      
+
       // Playlist
       // if (playlistId) {
       //   console.log("Playlist erkannt:", playlistId);
@@ -46,11 +52,11 @@ const MusicCheck = () => {
         }));
       }, 50);
 
-      setPlaylistContext([{
+      setPlaylistContext({
         name: "",
         url: url,
         id: 0,
-      }]);
+      });
       // Array klammern um den context für spätere List Ideen
     } catch (error) {
       console.log("Ungültige URL:", error);
@@ -66,10 +72,22 @@ const MusicCheck = () => {
         className={""}
         formarray={formarray}
       />
-      {playerMode.mode === "test" ? 
-      <div>
-      test
-      </div> : <></>}
+      {playerMode.mode === "test" ? (
+        <div>
+          {localeStorageContext.playlist.map((item) => (
+            <div>
+              <h2>{item.id}</h2>
+              <ul>
+                {item.songs.map((songs, key) => (
+                  <li key={key}>{songs}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <></>
+      )}
     </>
   );
 };

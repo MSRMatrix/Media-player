@@ -17,6 +17,7 @@ const Videoplayer = ({ checkStatus, setCheckStatus }) => {
   const [videoTitle, setVideoTitle] = useState("");
   const [volume, setVolume] = useState(0.5);
   const currentSong = playlistContext;
+  
 
   const changeTime = (e) => {
     const value = Number(e.target.value);
@@ -93,6 +94,7 @@ const Videoplayer = ({ checkStatus, setCheckStatus }) => {
       text: "Shuffle",
     },
   ];
+  
 
   return (
     <div ref={playerRef}>

@@ -29,12 +29,13 @@ const [localeStorageContext, setLocaleStorageContext] = useState(() => {
     };
   }
 
-  const initialPlaylist = {
-    
+  const initialPlaylist = [
+    {
+      id: "defaultList",
       title: "Neue Playlist",
       songs: [],
-    
-  };
+    },
+  ];
 
   localStorage.setItem("playlist", JSON.stringify(initialPlaylist));
 
