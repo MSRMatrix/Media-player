@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import { PlaylistContext } from "../../context/PlaylistContext";
 import { PlayerModeContext } from "../../context/PlayerModeContext";
@@ -8,16 +8,15 @@ import Input from "../../elements/Input";
 const Videoplayer = ({ checkStatus, setCheckStatus }) => {
   const { playerMode, setPlayerMode } = useContext(PlayerModeContext);
   const { playlistContext } = useContext(PlaylistContext);
-  const playerRef = useRef(null);
 
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [playbackRate, setplayerbackRate] = useState(1);
+  const [loadedMetaData, setLoadedMetaData] = useState(null);
 
   const [videoTitle, setVideoTitle] = useState("");
   const [volume, setVolume] = useState(0.5);
   const currentSong = playlistContext;
-  
 
   const changeTime = (e) => {
     const value = Number(e.target.value);
@@ -94,19 +93,47 @@ const Videoplayer = ({ checkStatus, setCheckStatus }) => {
       text: "Shuffle",
     },
   ];
-  
+
+  useEffect(() => {
+    if (!loadedMetaData) return;
+
+    if (loadedMetaData.playerInfo?.playlist) {
+      console.log(loadedMetaData.playerInfo?.playlist);
+      const playlist = loadedMetaData.playerInfo.playlist;
+
+      const urls = playlist.map(
+        (videoId) => `https://www.youtube.com/watch?v=${videoId}`,
+      );
+
+      console.log(urls);
+      // User fragen ob er alle Urls in einer Playlist haben will und dann alles unten displayen mit drag und drop dann in jede Liste hinzufügen können und auch Listen dabei erstellen k{önnen
+      return;
+    } else {
+      console.log(`no playlist`);
+
+      setPlayerMode((prev) => ({
+        ...prev,
+        play: true,
+      }));
+      return;
+    }
+  }, [loadedMetaData]);
 
   return (
-    <div ref={playerRef}>
+    <div>
       <ReactPlayer
-        ref={playerRef}
         src={currentSong?.url}
         volume={volume}
         playbackRate={playbackRate}
-        onReady={() => {
-          const title = playerRef.current?.api?.videoTitle;
+        onLoadedMetadata={(e) => {
+          setLoadedMetaData(e.srcElement.api);
+          const title = e.srcElement.api?.videoTitle;
           setVideoTitle(title);
           setCheckStatus("ready");
+          setPlayerMode((prev) => ({
+            ...prev,
+            mode: "test",
+          }));
         }}
         onDurationChange={(e) => {
           setDuration(e.currentTarget.duration);

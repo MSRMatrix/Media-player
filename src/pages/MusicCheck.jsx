@@ -27,37 +27,13 @@ const MusicCheck = () => {
 
   async function onSubmit(e) {
     e.preventDefault();
-
     const url = e.target.elements.url.value;
-
     try {
-      const urlObject = new URL(url);
-      const playlistId = urlObject.searchParams.get("list");
-
-      console.log(urlObject);
-      
-
-      // Playlist
-      // if (playlistId) {
-      //   console.log("Playlist erkannt:", playlistId);
-      // }
-
-      // Einzelnes Video
-
-      setTimeout(() => {
-        setPlayerMode((prev) => ({
-          ...prev,
-          play: true,
-          mode: "test",
-        }));
-      }, 50);
-
       setPlaylistContext({
         name: "",
         url: url,
         id: 0,
       });
-      // Array klammern um den context für spätere List Ideen
     } catch (error) {
       console.log("Ungültige URL:", error);
     }
