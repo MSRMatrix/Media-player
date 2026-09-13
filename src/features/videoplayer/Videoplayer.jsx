@@ -7,16 +7,26 @@ import Input from "../../elements/Input";
 
 const Videoplayer = ({ checkStatus, setCheckStatus }) => {
   const { playerMode, setPlayerMode } = useContext(PlayerModeContext);
-  const { playlistContext } = useContext(PlaylistContext);
+  const { playlistContext, setPlaylistContext } =
+    useContext(PlaylistContext);
 
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [playbackRate, setplayerbackRate] = useState(1);
-  const [loadedMetaData, setLoadedMetaData] = useState(null);
 
   const [videoTitle, setVideoTitle] = useState("");
   const [volume, setVolume] = useState(0.5);
-  const currentSong = playlistContext;
+
+  // Temporäre Playlist zum Einsammeln der Metadaten
+  const [metadataPlaylist, setMetadataPlaylist] = useState([]);
+  const [metadataIndex, setMetadataIndex] = useState(0);
+  const [collectingPlaylist, setCollectingPlaylist] = useState(false);
+
+  const currentSong = Array.isArray(playlistContext)
+    ? playlistContext[metadataIndex]
+    : playlistContext;
+
+  const playerRef = useRef(null);
 
   const changeTime = (e) => {
     const value = Number(e.target.value);
@@ -94,66 +104,167 @@ const Videoplayer = ({ checkStatus, setCheckStatus }) => {
     },
   ];
 
-  useEffect(() => {
-    if (!loadedMetaData) return;
+  /*
+   * Startet das Einsammeln der Playlist.
+   *
+   * Aus den YouTube-IDs wird zuerst eine temporäre
+   * Playlist mit vollständigen URLs erstellt.
+   */
+  const startPlaylistCollection = (playlist) => {
+    const newPlaylist = playlist.map((videoId, index) => ({
+      name: "",
+      url: `https://www.youtube.com/watch?v=${videoId}`,
+      id: index,
+    }));
 
-    if (loadedMetaData.playerInfo?.playlist) {
-      console.log(loadedMetaData.playerInfo?.playlist);
-      const playlist = loadedMetaData.playerInfo.playlist;
+    setMetadataPlaylist(newPlaylist);
+    setMetadataIndex(0);
+    setCollectingPlaylist(true);
 
-      const urls = playlist.map(
-        (videoId) => `https://www.youtube.com/watch?v=${videoId}`,
-      );
+    setPlayerMode((prev) => ({
+      ...prev,
+      play: false,
+    }));
+  };
 
-      console.log(urls);
-      // User fragen ob er alle Urls in einer Playlist haben will und dann alles unten displayen mit drag und drop dann in jede Liste hinzufügen können und auch Listen dabei erstellen k{önnen
-      return;
+  /*
+   * Wird ausgeführt, sobald ReactPlayer die Metadaten
+   * des aktuell geladenen Videos besitzt.
+   */
+  const handleLoadedMetadata = (e) => {
+  const api = e.srcElement.api;
+
+
+  const title = api?.videoTitle || "";
+
+  setVideoTitle(title);
+  setCheckStatus("ready");
+
+  if (collectingPlaylist) {
+    setMetadataPlaylist((prev) =>
+      prev.map((item, index) =>
+        index === metadataIndex
+          ? {
+              ...item,
+              name: title,
+            }
+          : item,
+      ),
+    );
+
+    if (metadataIndex < metadataPlaylist.length - 1) {
+      setMetadataIndex((prev) => prev + 1);
     } else {
-      console.log(`no playlist`);
-
-      setPlayerMode((prev) => ({
-        ...prev,
-        play: true,
-      }));
-      return;
+      setCollectingPlaylist(false);
+      setMetadataIndex(0)
     }
-  }, [loadedMetaData]);
+
+    return;
+  }
+
+  setPlayerMode((prev) => ({
+    ...prev,
+    mode: "test",
+  }));
+
+  const playlist = api.playerInfo?.playlist;
+
+  if (!playlist) {
+    setPlayerMode((prev) => ({
+      ...prev,
+      play: true,
+    }));
+
+    return;
+  }
+
+  const question = confirm(
+    "Do you want to copy the whole playlist?",
+  );
+
+  if (!question) {
+    setPlayerMode((prev) => ({
+      ...prev,
+      play: true,
+    }));
+
+    return;
+  }
+
+  startPlaylistCollection(playlist);
+};
+
+  /*
+   * Prüft, ob das aktuell geladene Video eine Playlist besitzt.
+   */
+  /*
+   * Prüft, ob die komplette Playlist verarbeitet wurde.
+   *
+   * Erst wenn alle Namen vorhanden sind,
+   * wird sie in den eigentlichen PlaylistContext übernommen.
+   */
+  useEffect(() => {
+  if (collectingPlaylist) return;
+
+  if (metadataPlaylist.length === 0) return;
+
+  const complete = metadataPlaylist.every(
+    (item) => item.name !== "",
+  );
+
+  if (!complete) return;
+
+  setPlaylistContext(metadataPlaylist);
+
+  setPlayerMode((prev) => ({
+    ...prev,
+    play: true,
+  }));
+}, [collectingPlaylist, metadataPlaylist]);
+
+  /*
+   * Während des Einsammelns kommt der Song
+   * aus metadataPlaylist.
+   *
+   * Danach kommt er wieder aus playlistContext.
+   */
+  const metadataSong = metadataPlaylist[metadataIndex];
+
+  const playerSong = collectingPlaylist
+    ? metadataSong
+    : currentSong;
 
   return (
     <div>
       <ReactPlayer
-        src={currentSong?.url}
+      style={{display: !collectingPlaylist  ? ""  : "none"}}
+        ref={playerRef}
+        src={playerSong?.url}
         volume={volume}
         playbackRate={playbackRate}
-        onLoadedMetadata={(e) => {
-          setLoadedMetaData(e.srcElement.api);
-          const title = e.srcElement.api?.videoTitle;
-          setVideoTitle(title);
-          setCheckStatus("ready");
-          setPlayerMode((prev) => ({
-            ...prev,
-            mode: "test",
-          }));
-        }}
+        onLoadedMetadata={handleLoadedMetadata}
         onDurationChange={(e) => {
           setDuration(e.currentTarget.duration);
         }}
         onTimeUpdate={(e) => {
           setProgress(e.currentTarget.currentTime);
         }}
-        playing={playerMode.play}
+        playing={playerMode.play && !collectingPlaylist}
         onError={(error) => {
           setVideoTitle("");
           setCheckStatus("error");
           console.log("Fehler:", error);
         }}
       />
+
+      {!collectingPlaylist ? <></> : "Loading"}
+
       {playerButtons.map((item) =>
         item.element === "button" ? (
           <Button
             text={item.text}
             key={item.id}
-            classname={"button"}
+            classname="button"
             onClick={item.onClick}
           />
         ) : item.element === "input" ? (
@@ -164,18 +275,24 @@ const Videoplayer = ({ checkStatus, setCheckStatus }) => {
             rangeValue={item.rangeValue}
             text={item.text}
             key={item.id}
-            classname={"button"}
-            onChange={item.id === "progress" ? changeTime : item.onChange}
+            classname="button"
+            onChange={
+              item.id === "progress"
+                ? changeTime
+                : item.onChange
+            }
           />
-        ) : (
-          <></>
-        ),
+        ) : null,
       )}
-      {playerMode.mode === "test" ? (
-        <>{videoTitle && <h2>{videoTitle}</h2>}</>
-      ) : (
-        <></>
-      )}
+
+      {playerMode.mode === "test" && !collectingPlaylist ? (
+        <>
+          {videoTitle && <h2>{videoTitle}</h2>}
+        </>
+      ) : "Loading"}
+      {!metadataPlaylist ? <></> : metadataPlaylist.map((song) => (
+        <li onClick={() => setMetadataIndex(song.id)} key={song.id} value={song.url}>{song.name}</li>
+      ))}
     </div>
   );
 };
