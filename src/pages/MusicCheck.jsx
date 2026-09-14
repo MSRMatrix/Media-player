@@ -51,8 +51,8 @@ const MusicCheck = () => {
       {playerMode.mode === "test" ? (
         <div>
           {localeStorageContext.playlist.map((item) => (
-            <div>
-              <h2>{item.id}</h2>
+            <div key={item.id}>
+              <h2>{item.title}</h2>
               <ul>
                 {item.songs.map((songs, key) => (
                   <li key={key}>{songs}</li>

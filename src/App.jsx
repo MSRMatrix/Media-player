@@ -31,7 +31,7 @@ const [localeStorageContext, setLocaleStorageContext] = useState(() => {
 
   const initialPlaylist = [
     {
-      id: "defaultList",
+      id: crypto.randomUUID(),
       title: "Neue Playlist",
       songs: [],
     },

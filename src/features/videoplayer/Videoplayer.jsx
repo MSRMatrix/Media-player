@@ -4,11 +4,14 @@ import { PlaylistContext } from "../../context/PlaylistContext";
 import { PlayerModeContext } from "../../context/PlayerModeContext";
 import Button from "../../elements/Button";
 import Input from "../../elements/Input";
+import Icon from "../../components/Icon";
+import Form from "../../elements/Form";
+import { LocaleStorageContext } from "../../context/LocaleStorageContext";
 
 const Videoplayer = ({ checkStatus, setCheckStatus }) => {
   const { playerMode, setPlayerMode } = useContext(PlayerModeContext);
-  const { playlistContext, setPlaylistContext } =
-    useContext(PlaylistContext);
+  const { playlistContext, setPlaylistContext } = useContext(PlaylistContext);
+const { localeStorageContext, setLocaleStorageContext  } = useContext(LocaleStorageContext);
 
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -132,67 +135,64 @@ const Videoplayer = ({ checkStatus, setCheckStatus }) => {
    * des aktuell geladenen Videos besitzt.
    */
   const handleLoadedMetadata = (e) => {
-  const api = e.srcElement.api;
+    const api = e.srcElement.api;
 
+    const title = api?.videoTitle || "";
 
-  const title = api?.videoTitle || "";
+    setVideoTitle(title);
+    setCheckStatus("ready");
 
-  setVideoTitle(title);
-  setCheckStatus("ready");
+    if (collectingPlaylist) {
+      setMetadataPlaylist((prev) =>
+        prev.map((item, index) =>
+          index === metadataIndex
+            ? {
+                ...item,
+                name: title,
+              }
+            : item,
+        ),
+      );
 
-  if (collectingPlaylist) {
-    setMetadataPlaylist((prev) =>
-      prev.map((item, index) =>
-        index === metadataIndex
-          ? {
-              ...item,
-              name: title,
-            }
-          : item,
-      ),
-    );
+      if (metadataIndex < metadataPlaylist.length - 1) {
+        setMetadataIndex((prev) => prev + 1);
+      } else {
+        setCollectingPlaylist(false);
+        setMetadataIndex(0);
+      }
 
-    if (metadataIndex < metadataPlaylist.length - 1) {
-      setMetadataIndex((prev) => prev + 1);
-    } else {
-      setCollectingPlaylist(false);
-      setMetadataIndex(0)
+      return;
     }
 
-    return;
-  }
-
-  setPlayerMode((prev) => ({
-    ...prev,
-    mode: "test",
-  }));
-
-  const playlist = api.playerInfo?.playlist;
-
-  if (!playlist) {
     setPlayerMode((prev) => ({
       ...prev,
-      play: true,
+      mode: "test",
     }));
 
-    return;
-  }
+    const playlist = api.playerInfo?.playlist;
 
-  const question = confirm(
-    "Do you want to copy the whole playlist?",
-  );
+    if (!playlist) {
+      setPlayerMode((prev) => ({
+        ...prev,
+        play: true,
+      }));
 
-  if (!question) {
-    setPlayerMode((prev) => ({
-      ...prev,
-      play: true,
-    }));
+      return;
+    }
 
-    return;
-  }
+    const question = confirm("Do you want to copy the whole playlist?");
 
-  startPlaylistCollection(playlist);
-};
+    if (!question) {
+      setPlayerMode((prev) => ({
+        ...prev,
+        play: true,
+      }));
+
+      return;
+    }
+
+    startPlaylistCollection(playlist);
+  };
 
   /*
    * Prüft, ob das aktuell geladene Video eine Playlist besitzt.
@@ -204,23 +204,21 @@ const Videoplayer = ({ checkStatus, setCheckStatus }) => {
    * wird sie in den eigentlichen PlaylistContext übernommen.
    */
   useEffect(() => {
-  if (collectingPlaylist) return;
+    if (collectingPlaylist) return;
 
-  if (metadataPlaylist.length === 0) return;
+    if (metadataPlaylist.length === 0) return;
 
-  const complete = metadataPlaylist.every(
-    (item) => item.name !== "",
-  );
+    const complete = metadataPlaylist.every((item) => item.name !== "");
 
-  if (!complete) return;
+    if (!complete) return;
 
-  setPlaylistContext(metadataPlaylist);
+    setPlaylistContext(metadataPlaylist);
 
-  setPlayerMode((prev) => ({
-    ...prev,
-    play: true,
-  }));
-}, [collectingPlaylist, metadataPlaylist]);
+    setPlayerMode((prev) => ({
+      ...prev,
+      play: true,
+    }));
+  }, [collectingPlaylist, metadataPlaylist]);
 
   /*
    * Während des Einsammelns kommt der Song
@@ -230,14 +228,63 @@ const Videoplayer = ({ checkStatus, setCheckStatus }) => {
    */
   const metadataSong = metadataPlaylist[metadataIndex];
 
-  const playerSong = collectingPlaylist
-    ? metadataSong
-    : currentSong;
+  const playerSong = collectingPlaylist ? metadataSong : currentSong;
+
+    const formarray = [
+    {
+      id: 1,
+      element: "label",
+      text: "Create-new-list",
+    },
+    {
+      id: 2,
+      element: "input",
+      type: "text",
+      placeholder: "New list",
+    },
+  ];
+
+
+useEffect(() => {
+  localStorage.setItem(
+    "playlist",
+    JSON.stringify(localeStorageContext.playlist)
+  );
+}, [localeStorageContext.playlist]);
+
+
+
+
+function onSubmit(e) {
+  e.preventDefault();
+
+  const value = e.target.elements[2].value.trim();
+
+  const findPlaylist = localeStorageContext.playlist.find(
+    (item) => item.title === value
+  );
+
+  if (findPlaylist) {
+    alert("Playlist already exists");
+    return;
+  }
+
+  const newPlaylist = {
+    id: crypto.randomUUID(),
+    title: value,
+    songs: [],
+  };
+
+  setLocaleStorageContext((prev) => ({
+    ...prev,
+    playlist: [...prev.playlist, newPlaylist],
+  }));
+}
 
   return (
     <div>
       <ReactPlayer
-      style={{display: !collectingPlaylist  ? ""  : "none"}}
+        style={{ display: !collectingPlaylist ? "" : "none" }}
         ref={playerRef}
         src={playerSong?.url}
         volume={volume}
@@ -276,23 +323,45 @@ const Videoplayer = ({ checkStatus, setCheckStatus }) => {
             text={item.text}
             key={item.id}
             classname="button"
-            onChange={
-              item.id === "progress"
-                ? changeTime
-                : item.onChange
-            }
+            onChange={item.id === "progress" ? changeTime : item.onChange}
           />
         ) : null,
       )}
 
       {playerMode.mode === "test" && !collectingPlaylist ? (
-        <>
-          {videoTitle && <h2>{videoTitle}</h2>}
-        </>
-      ) : "Loading"}
-      {!metadataPlaylist ? <></> : metadataPlaylist.map((song) => (
-        <li onClick={() => setMetadataIndex(song.id)} key={song.id} value={song.url}>{song.name}</li>
-      ))}
+        <>{videoTitle && <h2>{videoTitle}</h2>}</>
+      ) : (
+        "Loading"
+      )}
+      {!metadataPlaylist ? (
+        <></>
+      ) : (
+        metadataPlaylist.map((song) => (
+          <>
+            <li
+              onClick={() => setMetadataIndex(song.id)}
+              key={song.id}
+              value={song.url}
+            >
+              {song.name}
+            </li>
+            <>
+            <Icon iconName={"faHandPointer"} />
+            <Icon iconName={"faTrashCan"} />
+            <Icon iconName={"faGripLinesVertical"} />
+            </>
+          </>
+        ))
+      )}
+      <div>
+        <Form 
+        submitFunction={onSubmit}
+        text="Create new list"
+        id="Create-new-list"
+        className={""}
+        formarray={formarray}
+        />
+      </div>
     </div>
   );
 };
