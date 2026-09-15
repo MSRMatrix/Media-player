@@ -11,13 +11,13 @@ import { LocaleStorageContext } from "../../context/LocaleStorageContext";
 const Videoplayer = ({ checkStatus, setCheckStatus }) => {
   const { playerMode, setPlayerMode } = useContext(PlayerModeContext);
   const { playlistContext, setPlaylistContext } = useContext(PlaylistContext);
-const { localeStorageContext, setLocaleStorageContext  } = useContext(LocaleStorageContext);
+  const { localeStorageContext, setLocaleStorageContext } =
+    useContext(LocaleStorageContext);
 
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [playbackRate, setplayerbackRate] = useState(1);
 
-  const [videoTitle, setVideoTitle] = useState("");
   const [volume, setVolume] = useState(0.5);
 
   // Temporäre Playlist zum Einsammeln der Metadaten
@@ -138,8 +138,11 @@ const { localeStorageContext, setLocaleStorageContext  } = useContext(LocaleStor
     const api = e.srcElement.api;
 
     const title = api?.videoTitle || "";
-
-    setVideoTitle(title);
+    
+setPlaylistContext((prev) => ({
+  ...prev,
+  name: title,
+}));
     setCheckStatus("ready");
 
     if (collectingPlaylist) {
@@ -155,7 +158,9 @@ const { localeStorageContext, setLocaleStorageContext  } = useContext(LocaleStor
       );
 
       if (metadataIndex < metadataPlaylist.length - 1) {
-        setMetadataIndex((prev) => prev + 1);
+        setTimeout(() => {
+          setMetadataIndex((prev) => prev + 1);
+        }, 200);
       } else {
         setCollectingPlaylist(false);
         setMetadataIndex(0);
@@ -230,7 +235,7 @@ const { localeStorageContext, setLocaleStorageContext  } = useContext(LocaleStor
 
   const playerSong = collectingPlaylist ? metadataSong : currentSong;
 
-    const formarray = [
+  const formarray = [
     {
       id: 1,
       element: "label",
@@ -244,42 +249,38 @@ const { localeStorageContext, setLocaleStorageContext  } = useContext(LocaleStor
     },
   ];
 
+  useEffect(() => {
+    localStorage.setItem(
+      "playlist",
+      JSON.stringify(localeStorageContext.playlist),
+    );
+  }, [localeStorageContext.playlist]);
 
-useEffect(() => {
-  localStorage.setItem(
-    "playlist",
-    JSON.stringify(localeStorageContext.playlist)
-  );
-}, [localeStorageContext.playlist]);
+  function onSubmit(e) {
+    e.preventDefault();
 
+    const value = e.target.elements[2].value.trim();
 
+    const findPlaylist = localeStorageContext.playlist.find(
+      (item) => item.title === value,
+    );
 
+    if (findPlaylist) {
+      alert("Playlist already exists");
+      return;
+    }
 
-function onSubmit(e) {
-  e.preventDefault();
+    const newPlaylist = {
+      id: crypto.randomUUID(),
+      title: value,
+      songs: [],
+    };
 
-  const value = e.target.elements[2].value.trim();
-
-  const findPlaylist = localeStorageContext.playlist.find(
-    (item) => item.title === value
-  );
-
-  if (findPlaylist) {
-    alert("Playlist already exists");
-    return;
+    setLocaleStorageContext((prev) => ({
+      ...prev,
+      playlist: [...prev.playlist, newPlaylist],
+    }));
   }
-
-  const newPlaylist = {
-    id: crypto.randomUUID(),
-    title: value,
-    songs: [],
-  };
-
-  setLocaleStorageContext((prev) => ({
-    ...prev,
-    playlist: [...prev.playlist, newPlaylist],
-  }));
-}
 
   return (
     <div>
@@ -329,13 +330,11 @@ function onSubmit(e) {
       )}
 
       {playerMode.mode === "test" && !collectingPlaylist ? (
-        <>{videoTitle && <h2>{videoTitle}</h2>}</>
+        <>{playlistContext.name && <h2>{playlistContext.name}</h2>}</>
       ) : (
         "Loading"
       )}
-      {!metadataPlaylist ? (
-        <></>
-      ) : (
+      {metadataPlaylist.length > 1 ? (
         metadataPlaylist.map((song) => (
           <>
             <li
@@ -345,25 +344,30 @@ function onSubmit(e) {
             >
               {song.name}
             </li>
+
             <>
-            <Icon iconName={"faHandPointer"} />
-            <Icon iconName={"faTrashCan"} />
-            <Icon iconName={"faGripLinesVertical"} />
+              <Icon iconName={"faHandPointer"} />
+              <Icon iconName={"faTrashCan"} />
+              <Icon iconName={"faGripLinesVertical"} />
             </>
           </>
         ))
+      ) : playlistContext ? (
+        <li value={playlistContext.url}>{playlistContext.name}</li>
+      ) : (
+        <></>
       )}
       <div>
-        <Form 
-        submitFunction={onSubmit}
-        text="Create new list"
-        id="Create-new-list"
-        className={""}
-        formarray={formarray}
+        <Form
+          submitFunction={onSubmit}
+          text="Create new list"
+          id="Create-new-list"
+          className={""}
+          formarray={formarray}
         />
       </div>
     </div>
   );
 };
-
+// Drag and Drop
 export default Videoplayer;
