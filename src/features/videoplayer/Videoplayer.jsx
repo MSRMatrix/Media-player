@@ -25,9 +25,7 @@ const Videoplayer = ({ checkStatus, setCheckStatus }) => {
   const [metadataIndex, setMetadataIndex] = useState(0);
   const [collectingPlaylist, setCollectingPlaylist] = useState(false);
 
-  const currentSong = Array.isArray(playlistContext)
-    ? playlistContext[metadataIndex]
-    : playlistContext;
+  const currentSong =  !playlistContext[metadataIndex] ? playlistContext : playlistContext[metadataIndex];
 
   const playerRef = useRef(null);
 
@@ -199,15 +197,9 @@ setPlaylistContext((prev) => ({
     startPlaylistCollection(playlist);
   };
 
-  /*
-   * Prüft, ob das aktuell geladene Video eine Playlist besitzt.
-   */
-  /*
-   * Prüft, ob die komplette Playlist verarbeitet wurde.
-   *
-   * Erst wenn alle Namen vorhanden sind,
-   * wird sie in den eigentlichen PlaylistContext übernommen.
-   */
+
+
+
   useEffect(() => {
     if (collectingPlaylist) return;
 
@@ -282,6 +274,8 @@ setPlaylistContext((prev) => ({
     }));
   }
 
+  
+  
   return (
     <div>
       <ReactPlayer
@@ -299,7 +293,6 @@ setPlaylistContext((prev) => ({
         }}
         playing={playerMode.play && !collectingPlaylist}
         onError={(error) => {
-          setVideoTitle("");
           setCheckStatus("error");
           console.log("Fehler:", error);
         }}
