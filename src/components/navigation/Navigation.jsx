@@ -1,10 +1,19 @@
 import { useNavigate, useLocation } from "react-router-dom";
+import { PlayerModeContext } from "../../context/PlayerModeContext";
+import { useContext } from "react";
 
-const Navigation = () => {
+const Navigation = ({setMetadataPlaylist}) => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const { playerMode, setPlayerMode } = useContext(PlayerModeContext);
+
   function navigateFunction(e) {
+     setPlayerMode((prev) => ({
+      ...prev,
+      mode: "",
+    }));
+    setMetadataPlaylist([])
     navigate(`/${e.target.value}`);
   }
 
