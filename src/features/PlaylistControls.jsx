@@ -12,6 +12,9 @@ const PlaylistControls = ({
   setPlaybackRate,
   volume,
   setVolume,
+  metadataIndex,
+setMetadataIndex,
+metadataPlaylist,
 }) => {
   const { playerMode, setPlayerMode } = useContext(PlayerModeContext);
 
@@ -27,6 +30,8 @@ const PlaylistControls = ({
       element: "button",
       id: "previous",
       text: "Previous",
+      onClick: () => metadataIndex === 0 ? setMetadataIndex(metadataPlaylist.length - 1) : setMetadataIndex(metadataIndex - 1)
+        ,
     },
     {
       element: "button",
@@ -42,6 +47,8 @@ const PlaylistControls = ({
       element: "button",
       id: "next",
       text: "Next",
+      onClick: () => metadataPlaylist.length === metadataIndex + 1 ? setMetadataIndex(0) : setMetadataIndex(metadataIndex + 1)
+        ,
     },
     {
       element: "input",

@@ -8,17 +8,26 @@ import PlaylistControls from "./PlaylistControls";
 import PlaylistView from "./PlaylistView";
 import PlayerStatus from "./PlayerStatus";
 import { handleLoadedMetadata } from "../utils/playerFunctions";
+import { useLocation } from "react-router-dom";
 
-const Player = ({ checkStatus, setCheckStatus,  metadataPlaylist, setMetadataPlaylist}) => {
+const Player = ({
+  checkStatus,
+  setCheckStatus,
+  metadataPlaylist,
+  setMetadataPlaylist,
+}) => {
   const { playerMode, setPlayerMode } = useContext(PlayerModeContext);
   const { playlistContext, setPlaylistContext } = useContext(PlaylistContext);
   const { localeStorageContext, setLocaleStorageContext } =
     useContext(LocaleStorageContext);
 
+  const location = useLocation();
+
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [playbackRate, setplayerbackRate] = useState(1);
   const [volume, setVolume] = useState(0.5);
+  const [loop, setLoop] = useState(true)
 
   // Temporäre Playlist zum Einsammeln der Metadaten
   const [metadataIndex, setMetadataIndex] = useState(0);
@@ -45,6 +54,7 @@ const Player = ({ checkStatus, setCheckStatus,  metadataPlaylist, setMetadataPla
       ...prev,
       play: true,
     }));
+    setLoop(false)
   }, [collectingPlaylist, metadataPlaylist]);
 
   const metadataSong = metadataPlaylist[metadataIndex];
@@ -55,7 +65,8 @@ const Player = ({ checkStatus, setCheckStatus,  metadataPlaylist, setMetadataPla
       "playlist",
       JSON.stringify(localeStorageContext.playlist),
     );
-  }, [localeStorageContext.playlist]);
+  }, [localeStorageContext.playlist]);;
+  
 
   return (
     <div>
@@ -85,7 +96,13 @@ const Player = ({ checkStatus, setCheckStatus,  metadataPlaylist, setMetadataPla
         onTimeUpdate={(e) => {
           setProgress(e.currentTarget.currentTime);
         }}
+        onEnded={() => {
+    metadataPlaylist.length === metadataIndex + 1
+      ? setMetadataIndex(0)
+      : setMetadataIndex(metadataIndex + 1);
+  }}
         playing={playerMode.play && !collectingPlaylist}
+        loop={loop}
         onError={(error) => {
           setCheckStatus("error");
           console.log("Fehler:", error);
@@ -102,6 +119,9 @@ const Player = ({ checkStatus, setCheckStatus,  metadataPlaylist, setMetadataPla
         setplayerbackRate={setplayerbackRate}
         volume={volume}
         setVolume={setVolume}
+        metadataIndex={metadataIndex}
+        setMetadataIndex={setMetadataIndex}
+        metadataPlaylist={metadataPlaylist}
       />
 
       <PlayerStatus
@@ -110,15 +130,25 @@ const Player = ({ checkStatus, setCheckStatus,  metadataPlaylist, setMetadataPla
       />
 
       {playerMode.mode === "test" ? (
-        <PlaylistView
-          metadataPlaylist={metadataPlaylist}
-          setMetadataIndex={setMetadataIndex}
-        />
+        <>
+          <PlaylistView
+            metadataPlaylist={metadataPlaylist}
+            metadataIndex={metadataIndex}
+            setMetadataIndex={setMetadataIndex}
+            playerSong={playerSong}
+          />
+          {localeStorageContext.playlist.map((item) => item.title)}
+        </>
       ) : (
         <></>
       )}
 
-      <CreatePlaylist />
+      {location.pathname === `/music-check` ||
+      location.pathname === `/lists` ? (
+        <CreatePlaylist />
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

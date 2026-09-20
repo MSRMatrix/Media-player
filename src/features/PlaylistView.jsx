@@ -4,19 +4,23 @@ import PlaylistItem from "./PlaylistItem";
 
 const PlaylistView = ({
   metadataPlaylist,
+  metadataIndex,
   setMetadataIndex,
+  playerSong
 }) => {
 
   const { playlistContext } = useContext(PlaylistContext);
-
+  
   if (metadataPlaylist.length > 1) {
     return (
       <>
+        {metadataIndex + 1}/{metadataPlaylist.length}
         {metadataPlaylist.map((song) => (
           <PlaylistItem
             key={song.id}
             song={song}
             setMetadataIndex={setMetadataIndex}
+            playerSong={playerSong}
           />
         ))}
       </>
