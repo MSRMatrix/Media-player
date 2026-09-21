@@ -27,7 +27,7 @@ const Player = ({
   const [duration, setDuration] = useState(0);
   const [playbackRate, setplayerbackRate] = useState(1);
   const [volume, setVolume] = useState(0.5);
-  const [loop, setLoop] = useState(true)
+  const [loop, setLoop] = useState(true);
 
   // Temporäre Playlist zum Einsammeln der Metadaten
   const [metadataIndex, setMetadataIndex] = useState(0);
@@ -54,7 +54,7 @@ const Player = ({
       ...prev,
       play: true,
     }));
-    setLoop(false)
+    setLoop(false);
   }, [collectingPlaylist, metadataPlaylist]);
 
   const metadataSong = metadataPlaylist[metadataIndex];
@@ -65,8 +65,7 @@ const Player = ({
       "playlist",
       JSON.stringify(localeStorageContext.playlist),
     );
-  }, [localeStorageContext.playlist]);;
-  
+  }, [localeStorageContext.playlist]);
 
   return (
     <div>
@@ -97,10 +96,10 @@ const Player = ({
           setProgress(e.currentTarget.currentTime);
         }}
         onEnded={() => {
-    metadataPlaylist.length === metadataIndex + 1
-      ? setMetadataIndex(0)
-      : setMetadataIndex(metadataIndex + 1);
-  }}
+          metadataPlaylist.length === metadataIndex + 1
+            ? setMetadataIndex(0)
+            : setMetadataIndex(metadataIndex + 1);
+        }}
         playing={playerMode.play && !collectingPlaylist}
         loop={loop}
         onError={(error) => {

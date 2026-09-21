@@ -1,17 +1,17 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AppShell from "./layout/AppShell";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { PlaylistContext } from "./context/PlaylistContext";
 import Home from "./pages/Home";
 import Lists from "./pages/Lists";
 import List from "./pages/List";
 import ImportExport from "./pages/ImportExport";
 import Tutorial from "./pages/Tutorial";
-import MusicCheck from "./pages/MusicCheck";
 import Youtube from "./pages/Youtube";
 import NotFound from "./pages/NotFound";
 import { PlayerModeContext } from "./context/PlayerModeContext";
 import { LocaleStorageContext } from "./context/LocaleStorageContext";
+import MediaInput from "./pages/MediaInput"
 
 function App() {
   const [playlistContext, setPlaylistContext] = useState([]);
@@ -70,8 +70,8 @@ const [localeStorageContext, setLocaleStorageContext] = useState(() => {
           element: <Tutorial />,
         },
         {
-          path: "music-check",
-          element: <MusicCheck />,
+          path: "media-input",
+          element: <MediaInput />,
         },
         {
           path: "youtube",

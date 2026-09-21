@@ -3,27 +3,13 @@ import Form from "../elements/Form";
 import { PlaylistContext } from "../context/PlaylistContext";
 import { PlayerModeContext } from "../context/PlayerModeContext";
 import { LocaleStorageContext } from "../context/LocaleStorageContext";
+import { mediaInputArray } from "../config/mediaInputArray";
 
-const MusicCheck = () => {
+const MediaInput = () => {
   const { setPlaylistContext } = useContext(PlaylistContext);
   const { playerMode, setPlayerMode } = useContext(PlayerModeContext);
   const { localeStorageContext, setLocaleStorageContext } =
     useContext(LocaleStorageContext);
-
-  const formarray = [
-    {
-      id: 1,
-      element: "label",
-      text: "Test Song",
-    },
-    {
-      id: 2,
-      element: "input",
-      type: "url",
-      name: "url",
-      placeholder: "Musik-URL",
-    },
-  ];
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -46,7 +32,7 @@ const MusicCheck = () => {
         text="Musik überprüfen"
         id="music-check-form"
         className={""}
-        formarray={formarray}
+        formarray={mediaInputArray}
       />
       {playerMode.mode === "test" ? (
         <div>
@@ -68,4 +54,4 @@ const MusicCheck = () => {
   );
 };
 
-export default MusicCheck;
+export default MediaInput;
