@@ -7,8 +7,8 @@ import { mediaInputArray } from "../config/mediaInputArray";
 
 const MediaInput = () => {
   const { setPlaylistContext } = useContext(PlaylistContext);
-  const { playerMode, setPlayerMode } = useContext(PlayerModeContext);
-  const { localeStorageContext, setLocaleStorageContext } =
+  const { playerMode } = useContext(PlayerModeContext);
+  const { localeStorageContext } =
     useContext(LocaleStorageContext);
 
   async function onSubmit(e) {
@@ -22,6 +22,8 @@ const MediaInput = () => {
       });
     } catch (error) {
       console.log("Ungültige URL:", error);
+    } finally {
+      e.target.reset();
     }
   }
 

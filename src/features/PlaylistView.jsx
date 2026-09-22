@@ -10,7 +10,7 @@ const PlaylistView = ({
 }) => {
 
   const { playlistContext } = useContext(PlaylistContext);
-  
+
   if (metadataPlaylist.length > 1) {
     return (
       <>

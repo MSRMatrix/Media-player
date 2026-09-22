@@ -1,3 +1,24 @@
+function durationProgress(progress, duration){
+
+const hours = Math.floor(progress / 3600);
+const minutes = Math.floor((progress % 3600) / 60);
+const seconds = Math.floor(progress % 60);
+
+const durationHours = Math.floor(duration / 3600);
+const durationMinutes = Math.floor((duration % 3600) / 60);
+const durationSeconds = Math.floor(duration % 60);
+
+return `Progress ${hours}:${minutes
+  .toString()
+  .padStart(2, "0")}:${seconds
+  .toString()
+  .padStart(2, "0")} / ${durationHours}:${durationMinutes
+  .toString()
+  .padStart(2, "0")}:${durationSeconds
+  .toString()
+  .padStart(2, "0")}`
+}
+
 export const createPlayerButtons = ({
   metadataIndex,
   metadataPlaylist,
@@ -39,7 +60,7 @@ export const createPlayerButtons = ({
     {
       element: "input",
       id: "volume",
-      text: "Volume",
+      text: volume,
       rangeValue: volume,
       onChange: (e) => setVolume(Number(e.target.value)),
       min: 0,
@@ -49,7 +70,7 @@ export const createPlayerButtons = ({
     {
       element: "input",
       id: "rate",
-      text: "Rate",
+      text: `Rate: ${playbackRate}`,
       rangeValue: playbackRate,
       onChange: (e) => setPlaybackRate(Number(e.target.value)),
       min: 0,
@@ -65,7 +86,7 @@ export const createPlayerButtons = ({
     {
       element: "input",
       id: "progress",
-      text: "Progress",
+      text: durationProgress(progress, duration),
       rangeValue: progress,
       min: 0,
       max: duration,

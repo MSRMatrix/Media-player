@@ -25,17 +25,13 @@ const Player = ({
 
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [playbackRate, setplayerbackRate] = useState(1);
+  const [playbackRate, setPlaybackRate] = useState(1);
   const [volume, setVolume] = useState(0.5);
   const [loop, setLoop] = useState(true);
 
   // Temporäre Playlist zum Einsammeln der Metadaten
   const [metadataIndex, setMetadataIndex] = useState(0);
   const [collectingPlaylist, setCollectingPlaylist] = useState(false);
-
-  const currentSong = !playlistContext[metadataIndex]
-    ? playlistContext
-    : playlistContext[metadataIndex];
 
   const playerRef = useRef(null);
 
@@ -59,13 +55,19 @@ const Player = ({
 
   const metadataSong = metadataPlaylist[metadataIndex];
 
-  const playerSong = collectingPlaylist ? metadataSong : currentSong;
+  const playerSong = collectingPlaylist
+    ? metadataSong
+    : !playlistContext[metadataIndex]
+      ? playlistContext
+      : playlistContext[metadataIndex];
+
   useEffect(() => {
     localStorage.setItem(
       "playlist",
       JSON.stringify(localeStorageContext.playlist),
     );
   }, [localeStorageContext.playlist]);
+console.log(playlistContext);
 
   return (
     <div>
@@ -115,7 +117,7 @@ const Player = ({
         duration={duration}
         setDuration={setDuration}
         playbackRate={playbackRate}
-        setplayerbackRate={setplayerbackRate}
+        setPlaybackRate={setPlaybackRate}
         volume={volume}
         setVolume={setVolume}
         metadataIndex={metadataIndex}
@@ -126,6 +128,7 @@ const Player = ({
       <PlayerStatus
         collectingPlaylist={collectingPlaylist}
         playerMode={playerMode}
+        playerSong={playerSong}
       />
 
       {playerMode.mode === "test" ? (

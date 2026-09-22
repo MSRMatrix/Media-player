@@ -10,6 +10,7 @@ export const handleLoadedMetadata = (
   setCollectingPlaylist,
   setPlayerMode,
 ) => {
+
   const api = e.srcElement.api;
 
   const title = api?.videoTitle || "";
@@ -61,13 +62,13 @@ export const handleLoadedMetadata = (
   }
 
   const question = confirm("Do you want to copy the whole playlist?");
-
+  
   if (!question) {
     setPlayerMode((prev) => ({
       ...prev,
       play: true,
     }));
-
+    
     return;
   }
 
