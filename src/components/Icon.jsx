@@ -4,19 +4,37 @@ import {
   faHandPointer,
   faTrashCan,
   faGripLinesVertical,
-
+  faPlay,
+  faBackward,
+  faForward,
+  faVolumeHigh,
+  faVolume,
+  faVolumeLow,
+  faVolumeXmark,
+  faRepeat,
+  faShuffle,
+  faPause,
+  faBan,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { 
-
-} from "@fortawesome/free-brands-svg-icons";
+import {} from "@fortawesome/free-brands-svg-icons";
 
 const iconMap = {
   faCircleQuestion: faCircleQuestion,
   faHandPointer: faHandPointer,
-  faTrashCan:faTrashCan,
+  faTrashCan: faTrashCan,
   faGripLinesVertical: faGripLinesVertical,
-
+  faPlay: faPlay,
+  faBackward: faBackward,
+  faForward: faForward,
+  faVolumeHigh: faVolumeHigh,
+  faVolume: faVolume,
+  faVolumeLow: faVolumeLow,
+  faVolumeXmark: faVolumeXmark,
+  faRepeat: faRepeat,
+  faShuffle: faShuffle,
+  faPause: faPause,
+  faBan: faBan,
 };
 
 const Icon = ({ iconName }) => {

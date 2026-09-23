@@ -3,6 +3,7 @@ import { PlayerModeContext } from "../context/PlayerModeContext";
 import Button from "../elements/Button";
 import Input from "../elements/Input";
 import { createPlayerButtons } from "../utils/playerButtons";
+import Icon from "../components/Icon";
 
 const PlaylistControls = ({
   playerRef,
@@ -16,6 +17,9 @@ const PlaylistControls = ({
   metadataIndex,
   setMetadataIndex,
   metadataPlaylist,
+  playerSong,
+  loop,
+  setLoop,
 }) => {
   const { playerMode, setPlayerMode } = useContext(PlayerModeContext);
 
@@ -26,7 +30,7 @@ const PlaylistControls = ({
 
     playerRef.current?.api?.seekTo(value, "seconds");
   };
-  
+
   const playerButtons = createPlayerButtons({
     metadataIndex,
     metadataPlaylist,
@@ -39,6 +43,9 @@ const PlaylistControls = ({
     setPlaybackRate,
     progress,
     duration,
+    playerSong,
+    loop,
+    setLoop,
   });
 
   return (
@@ -50,7 +57,10 @@ const PlaylistControls = ({
             key={item.id}
             classname="button"
             onClick={item.onClick}
-          />
+            disabled={item.disabled}
+          >
+            <Icon iconName={item.iconName} />
+          </Button>
         ) : (
           <Input
             min={item.min}
@@ -59,6 +69,7 @@ const PlaylistControls = ({
             rangeValue={item.rangeValue}
             text={item.text}
             key={item.id}
+            disabled={item.disabled}
             classname="button"
             onChange={item.id === "progress" ? changeTime : item.onChange}
           />

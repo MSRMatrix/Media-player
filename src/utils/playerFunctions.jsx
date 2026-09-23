@@ -9,6 +9,7 @@ export const handleLoadedMetadata = (
   setMetadataIndex,
   setCollectingPlaylist,
   setPlayerMode,
+  playlistContext
 ) => {
 
   const api = e.srcElement.api;
@@ -64,13 +65,23 @@ export const handleLoadedMetadata = (
   const question = confirm("Do you want to copy the whole playlist?");
   
   if (!question) {
-    setPlayerMode((prev) => ({
-      ...prev,
-      play: true,
-    }));
-    
-    return;
-  }
+  const videoId = api.videoId;
+  console.log(playlistContext);
+  // Lied aus playlist ziehen
+
+  setPlaylistContext((prev) => ({
+    ...prev,
+    url: `https://www.youtube.com/watch?v=${videoId}`,
+    name: title,
+  }));
+
+  setPlayerMode((prev) => ({
+    ...prev,
+    play: true,
+  }));
+
+  return;
+}
 
   startPlaylistCollection(
     playlist,

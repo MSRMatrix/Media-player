@@ -26,7 +26,7 @@ const Player = ({
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1);
-  const [volume, setVolume] = useState(0.5);
+  const [volume, setVolume] = useState(0.2);
   const [loop, setLoop] = useState(true);
 
   // Temporäre Playlist zum Einsammeln der Metadaten
@@ -36,6 +36,7 @@ const Player = ({
   const playerRef = useRef(null);
 
   useEffect(() => {
+    
     if (collectingPlaylist) return;
 
     if (metadataPlaylist.length === 0) return;
@@ -67,8 +68,7 @@ const Player = ({
       JSON.stringify(localeStorageContext.playlist),
     );
   }, [localeStorageContext.playlist]);
-console.log(playlistContext);
-
+  
   return (
     <div>
       <ReactPlayer
@@ -89,7 +89,9 @@ console.log(playlistContext);
             setMetadataIndex,
             setCollectingPlaylist,
             setPlayerMode,
+            playlistContext
           )
+          
         }
         onDurationChange={(e) => {
           setDuration(e.currentTarget.duration);
@@ -98,12 +100,19 @@ console.log(playlistContext);
           setProgress(e.currentTarget.currentTime);
         }}
         onEnded={() => {
-          metadataPlaylist.length === metadataIndex + 1
-            ? setMetadataIndex(0)
-            : setMetadataIndex(metadataIndex + 1);
-        }}
+    if (loop) {
+      playerRef.current?.api?.seekTo(0, "seconds");
+      return;
+    }
+
+    setMetadataIndex((prev) =>
+      metadataPlaylist.length === prev + 1
+        ? 0
+        : prev + 1
+    );
+  }}
         playing={playerMode.play && !collectingPlaylist}
-        loop={loop}
+        loop={false}
         onError={(error) => {
           setCheckStatus("error");
           console.log("Fehler:", error);
@@ -123,6 +132,9 @@ console.log(playlistContext);
         metadataIndex={metadataIndex}
         setMetadataIndex={setMetadataIndex}
         metadataPlaylist={metadataPlaylist}
+        playerSong={playerSong}
+        loop={loop}
+        setLoop={setLoop}
       />
 
       <PlayerStatus
