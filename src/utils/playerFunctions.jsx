@@ -65,10 +65,8 @@ export const handleLoadedMetadata = (
   const question = confirm("Do you want to copy the whole playlist?");
   
   if (!question) {
-  const videoId = api.videoId;
-  console.log(playlistContext);
-  // Lied aus playlist ziehen
-
+  const videoId = api.playerInfo.videoData.video_id;
+  
   setPlaylistContext((prev) => ({
     ...prev,
     url: `https://www.youtube.com/watch?v=${videoId}`,

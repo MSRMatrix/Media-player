@@ -27,16 +27,17 @@ const Player = ({
   const [duration, setDuration] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1);
   const [volume, setVolume] = useState(0.2);
-  const [loop, setLoop] = useState(true);
+  const [loop, setLoop] = useState(false);
+  const [shuffle, setShuffle] = useState(false);
 
   // Temporäre Playlist zum Einsammeln der Metadaten
   const [metadataIndex, setMetadataIndex] = useState(0);
+
   const [collectingPlaylist, setCollectingPlaylist] = useState(false);
 
   const playerRef = useRef(null);
 
   useEffect(() => {
-    
     if (collectingPlaylist) return;
 
     if (metadataPlaylist.length === 0) return;
@@ -68,7 +69,7 @@ const Player = ({
       JSON.stringify(localeStorageContext.playlist),
     );
   }, [localeStorageContext.playlist]);
-  
+
   return (
     <div>
       <ReactPlayer
@@ -89,28 +90,43 @@ const Player = ({
             setMetadataIndex,
             setCollectingPlaylist,
             setPlayerMode,
-            playlistContext
+            playlistContext,
           )
-          
         }
         onDurationChange={(e) => {
           setDuration(e.currentTarget.duration);
+          
         }}
         onTimeUpdate={(e) => {
           setProgress(e.currentTarget.currentTime);
+          
         }}
         onEnded={() => {
-    if (loop) {
-      playerRef.current?.api?.seekTo(0, "seconds");
-      return;
-    }
+          if (loop) {
+            playerRef.current?.api?.seekTo(0, "seconds");
+            return;
+          }
 
-    setMetadataIndex((prev) =>
-      metadataPlaylist.length === prev + 1
-        ? 0
-        : prev + 1
-    );
-  }}
+          if (metadataPlaylist.length <= 1) {
+            setPlayerMode((prev) => ({
+              ...prev,
+              play: false,
+            }));
+            return;
+          }
+
+          if (shuffle) {
+            setMetadataIndex(
+              Math.floor(Math.random() * metadataPlaylist.length),
+            );
+            
+            return;
+          }
+
+          setMetadataIndex((prev) =>
+            prev + 1 >= metadataPlaylist.length ? 0 : prev + 1,
+          );
+        }}
         playing={playerMode.play && !collectingPlaylist}
         loop={false}
         onError={(error) => {
@@ -135,6 +151,8 @@ const Player = ({
         playerSong={playerSong}
         loop={loop}
         setLoop={setLoop}
+        shuffle={shuffle}
+        setShuffle={setShuffle}
       />
 
       <PlayerStatus

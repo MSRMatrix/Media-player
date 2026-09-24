@@ -20,6 +20,8 @@ const PlaylistControls = ({
   playerSong,
   loop,
   setLoop,
+  shuffle,
+  setShuffle,
 }) => {
   const { playerMode, setPlayerMode } = useContext(PlayerModeContext);
 
@@ -46,6 +48,8 @@ const PlaylistControls = ({
     playerSong,
     loop,
     setLoop,
+    shuffle,
+    setShuffle,
   });
 
   return (

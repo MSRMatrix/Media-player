@@ -29,6 +29,8 @@ export const createPlayerButtons = ({
   playerSong,
   loop,
   setLoop,
+  shuffle,
+  setShuffle,
 }) => [
   {
     element: "button",
@@ -36,10 +38,16 @@ export const createPlayerButtons = ({
     disabled: metadataPlaylist.length > 1 ? false : true,
     id: "previous",
     text: "Previous",
-    onClick: () =>
-      metadataIndex === 0
-        ? setMetadataIndex(metadataPlaylist.length - 1)
-        : setMetadataIndex(metadataIndex - 1),
+    onClick: () => {
+      if (shuffle) {
+        setMetadataIndex(Math.floor(Math.random() * metadataPlaylist.length));
+        return;
+      }
+
+      setMetadataIndex((prev) =>
+        prev === 0 ? metadataPlaylist.length - 1 : prev - 1,
+      );
+    },
   },
   {
     element: "button",
@@ -59,10 +67,15 @@ export const createPlayerButtons = ({
     disabled: metadataPlaylist.length > 1 ? false : true,
     id: "next",
     text: "Next",
-    onClick: () =>
+    onClick: () => {
+      if (shuffle) {
+        setMetadataIndex(Math.floor(Math.random() * metadataPlaylist.length));
+        return;
+      }
       metadataPlaylist.length === metadataIndex + 1
         ? setMetadataIndex(0)
-        : setMetadataIndex(metadataIndex + 1),
+        : setMetadataIndex(metadataIndex + 1);
+    },
   },
   {
     element: "input",
@@ -118,9 +131,10 @@ export const createPlayerButtons = ({
   },
   {
     element: "button",
-    iconName: "faShuffle",
+    iconName: shuffle ? "faShuffle" : "faLinkSlash",
     disabled: metadataPlaylist.length > 1 ? false : true,
     id: "shuffle",
     text: "Shuffle",
+    onClick: () => setShuffle(!shuffle),
   },
 ];

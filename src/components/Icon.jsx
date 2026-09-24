@@ -15,6 +15,8 @@ import {
   faShuffle,
   faPause,
   faBan,
+  faLinkSlash,
+
 } from "@fortawesome/free-solid-svg-icons";
 
 import {} from "@fortawesome/free-brands-svg-icons";
@@ -35,6 +37,8 @@ const iconMap = {
   faShuffle: faShuffle,
   faPause: faPause,
   faBan: faBan,
+  faLinkSlash: faLinkSlash,
+  
 };
 
 const Icon = ({ iconName }) => {
