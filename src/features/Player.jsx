@@ -95,11 +95,9 @@ const Player = ({
         }
         onDurationChange={(e) => {
           setDuration(e.currentTarget.duration);
-          
         }}
         onTimeUpdate={(e) => {
           setProgress(e.currentTarget.currentTime);
-          
         }}
         onEnded={() => {
           if (loop) {
@@ -119,7 +117,7 @@ const Player = ({
             setMetadataIndex(
               Math.floor(Math.random() * metadataPlaylist.length),
             );
-            
+
             return;
           }
 
@@ -161,6 +159,8 @@ const Player = ({
         playerSong={playerSong}
       />
 
+
+
       {playerMode.mode === "test" ? (
         <>
           <PlaylistView
@@ -169,11 +169,36 @@ const Player = ({
             setMetadataIndex={setMetadataIndex}
             playerSong={playerSong}
           />
-          {localeStorageContext.playlist.map((item) => item.title)}
+          Listen
+          {localeStorageContext.playlist.map((playlist) => (
+            <div
+              key={playlist.id}
+              onDragOver={(e) => {
+                e.preventDefault();
+                
+              }}
+              onDrop={(e) => {
+                e.preventDefault();
+              }}
+            >
+              <h2>{playlist.title}</h2>
+
+              <ul>
+                {playlist.songs.map((song) => (
+                  <li key={song.id}>{song.name}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </>
       ) : (
         <></>
       )}
+
+
+
+
+
 
       {location.pathname === `/music-check` ||
       location.pathname === `/lists` ? (
