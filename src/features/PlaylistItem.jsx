@@ -9,6 +9,7 @@ const PlaylistItem = ({ song, setMetadataIndex, playerSong }) => {
           e.dataTransfer.setData("text/plain", JSON.stringify(song));
         }}
         onClick={() => setMetadataIndex(song.id)}
+        data-url={song.url}
         value={song.url}
         style={{ background: playerSong.url === song.url ? "red" : "" }}
       >

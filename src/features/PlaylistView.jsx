@@ -6,36 +6,39 @@ const PlaylistView = ({
   metadataPlaylist,
   metadataIndex,
   setMetadataIndex,
-  playerSong
+  playerSong,
 }) => {
-
   const { playlistContext } = useContext(PlaylistContext);
 
-  if (metadataPlaylist.length > 1) {
-    return (
-      <>
-        {metadataIndex + 1}/{metadataPlaylist.length}
-        {metadataPlaylist.map((song) => (
-          <PlaylistItem
-            key={song.id}
-            song={song}
-            setMetadataIndex={setMetadataIndex}
-            playerSong={playerSong}
-          />
-        ))}
-      </>
-    );
+  const playlist =
+    metadataPlaylist.length > 0
+      ? metadataPlaylist
+      : playlistContext
+        ? [playlistContext]
+        : [];
+
+  if (playlist.length === 0) {
+    return null;
   }
 
-  if (playlistContext) {
-    return (
-      <li value={playlistContext.url}>
-        {playlistContext.name}
-      </li>
-    );
-  }
+  return (
+    <>
+      {playlist.length > 1 && (
+        <div>
+          {metadataIndex + 1}/{playlist.length}
+        </div>
+      )}
 
-  return null;
+      {playlist.map((song) => (
+        <PlaylistItem
+          key={song.id}
+          song={song}
+          setMetadataIndex={setMetadataIndex}
+          playerSong={playerSong}
+        />
+      ))}
+    </>
+  );
 };
 
 export default PlaylistView;

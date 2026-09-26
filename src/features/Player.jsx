@@ -9,6 +9,9 @@ import PlaylistView from "./PlaylistView";
 import PlayerStatus from "./PlayerStatus";
 import { handleLoadedMetadata } from "../utils/playerFunctions";
 import { useLocation } from "react-router-dom";
+import { onDrop } from "../utils/dragNDrop";
+import { onEnded } from "../utils/onEnded";
+import { onError } from "../utils/onError";
 
 const Player = ({
   checkStatus,
@@ -30,7 +33,6 @@ const Player = ({
   const [loop, setLoop] = useState(false);
   const [shuffle, setShuffle] = useState(false);
 
-  // Temporäre Playlist zum Einsammeln der Metadaten
   const [metadataIndex, setMetadataIndex] = useState(0);
 
   const [collectingPlaylist, setCollectingPlaylist] = useState(false);
@@ -99,38 +101,10 @@ const Player = ({
         onTimeUpdate={(e) => {
           setProgress(e.currentTarget.currentTime);
         }}
-        onEnded={() => {
-          if (loop) {
-            playerRef.current?.api?.seekTo(0, "seconds");
-            return;
-          }
-
-          if (metadataPlaylist.length <= 1) {
-            setPlayerMode((prev) => ({
-              ...prev,
-              play: false,
-            }));
-            return;
-          }
-
-          if (shuffle) {
-            setMetadataIndex(
-              Math.floor(Math.random() * metadataPlaylist.length),
-            );
-
-            return;
-          }
-
-          setMetadataIndex((prev) =>
-            prev + 1 >= metadataPlaylist.length ? 0 : prev + 1,
-          );
-        }}
+        onEnded={() => {onEnded(loop, playerRef, metadataPlaylist, setPlayerMode, shuffle, setMetadataIndex)}}
         playing={playerMode.play && !collectingPlaylist}
         loop={false}
-        onError={(error) => {
-          setCheckStatus("error");
-          console.log("Fehler:", error);
-        }}
+        onError={(error) => {onError(error, setCheckStatus)}}
       />
 
       <PlaylistControls
@@ -159,8 +133,6 @@ const Player = ({
         playerSong={playerSong}
       />
 
-
-
       {playerMode.mode === "test" ? (
         <>
           <PlaylistView
@@ -170,15 +142,15 @@ const Player = ({
             playerSong={playerSong}
           />
           Listen
+          {/* Drag und Drop klappt noch nicht ganz */}
           {localeStorageContext.playlist.map((playlist) => (
             <div
               key={playlist.id}
               onDragOver={(e) => {
                 e.preventDefault();
-                
               }}
               onDrop={(e) => {
-                e.preventDefault();
+                onDrop(e, setLocaleStorageContext, playlist);
               }}
             >
               <h2>{playlist.title}</h2>
@@ -194,11 +166,6 @@ const Player = ({
       ) : (
         <></>
       )}
-
-
-
-
-
 
       {location.pathname === `/music-check` ||
       location.pathname === `/lists` ? (
