@@ -80,6 +80,10 @@ const Player = ({
         src={playerSong?.url}
         volume={volume}
         playbackRate={playbackRate}
+        onWaiting={() =>
+          console.log("test")
+          
+        }
         onLoadedMetadata={(e) =>
           handleLoadedMetadata(
             e,
@@ -140,6 +144,8 @@ const Player = ({
             metadataIndex={metadataIndex}
             setMetadataIndex={setMetadataIndex}
             playerSong={playerSong}
+            collectingPlaylist={collectingPlaylist}
+            setMetadataPlaylist={setMetadataPlaylist}
           />
           Listen
           {/* Drag und Drop klappt noch nicht ganz */}

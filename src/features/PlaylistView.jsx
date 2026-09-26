@@ -7,6 +7,8 @@ const PlaylistView = ({
   metadataIndex,
   setMetadataIndex,
   playerSong,
+  collectingPlaylist,
+  setMetadataPlaylist,
 }) => {
   const { playlistContext } = useContext(PlaylistContext);
 
@@ -29,14 +31,20 @@ const PlaylistView = ({
         </div>
       )}
 
-      {playlist.map((song) => (
-        <PlaylistItem
-          key={song.id}
-          song={song}
-          setMetadataIndex={setMetadataIndex}
-          playerSong={playerSong}
-        />
-      ))}
+      {!collectingPlaylist ? (
+        playlist.map((song) => (
+          <PlaylistItem
+            key={song.id}
+            song={song}
+            setMetadataIndex={setMetadataIndex}
+            playerSong={playerSong}
+            setMetadataPlaylist={setMetadataPlaylist}
+            metadataPlaylist={metadataPlaylist}
+          />
+        ))
+      ) : (
+        <></>
+      )}
     </>
   );
 };
