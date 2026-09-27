@@ -33,6 +33,8 @@ const Player = ({
   const [loop, setLoop] = useState(false);
   const [shuffle, setShuffle] = useState(false);
 
+  const [dropPosition, setDropPosition] = useState(null);
+
   const [metadataIndex, setMetadataIndex] = useState(0);
 
   const [collectingPlaylist, setCollectingPlaylist] = useState(false);
@@ -80,10 +82,7 @@ const Player = ({
         src={playerSong?.url}
         volume={volume}
         playbackRate={playbackRate}
-        onWaiting={() =>
-          console.log("test")
-          
-        }
+        onWaiting={() => console.log("test")}
         onLoadedMetadata={(e) =>
           handleLoadedMetadata(
             e,
@@ -105,10 +104,21 @@ const Player = ({
         onTimeUpdate={(e) => {
           setProgress(e.currentTarget.currentTime);
         }}
-        onEnded={() => {onEnded(loop, playerRef, metadataPlaylist, setPlayerMode, shuffle, setMetadataIndex)}}
+        onEnded={() => {
+          onEnded(
+            loop,
+            playerRef,
+            metadataPlaylist,
+            setPlayerMode,
+            shuffle,
+            setMetadataIndex,
+          );
+        }}
         playing={playerMode.play && !collectingPlaylist}
         loop={false}
-        onError={(error) => {onError(error, setCheckStatus)}}
+        onError={(error) => {
+          onError(error, setCheckStatus);
+        }}
       />
 
       <PlaylistControls
@@ -156,14 +166,31 @@ const Player = ({
                 e.preventDefault();
               }}
               onDrop={(e) => {
-                onDrop(e, setLocaleStorageContext, playlist);
+                onDrop(e, setLocaleStorageContext, playlist, dropPosition);
               }}
             >
               <h2>{playlist.title}</h2>
 
               <ul>
-                {playlist.songs.map((song) => (
-                  <li key={song.id}>{song.name}</li>
+                {playlist.songs.map((song, index) => (
+                  <li
+                    key={song.id}
+                    data-index={index}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+
+                      const rect = e.currentTarget.getBoundingClientRect();
+
+                      const insertIndex =
+                        e.clientY < rect.top + rect.height / 2
+                          ? index
+                          : index + 1;
+
+                      setDropPosition(insertIndex)
+                    }}
+                  >
+                    {song.name}
+                  </li>
                 ))}
               </ul>
             </div>

@@ -32,7 +32,7 @@ const PlaylistView = ({
       )}
 
       {!collectingPlaylist ? (
-        playlist.map((song) => (
+        playlist.map((song, index) => (
           <PlaylistItem
             key={song.id}
             song={song}
@@ -40,6 +40,7 @@ const PlaylistView = ({
             playerSong={playerSong}
             setMetadataPlaylist={setMetadataPlaylist}
             metadataPlaylist={metadataPlaylist}
+            index={index}
           />
         ))
       ) : (

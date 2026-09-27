@@ -3,7 +3,7 @@ import Icon from "../components/Icon";
 import { PlaylistContext } from "../context/PlaylistContext";
 import { PlayerModeContext } from "../context/PlayerModeContext";
 
-const PlaylistItem = ({ song, setMetadataIndex, playerSong, setMetadataPlaylist, metadataPlaylist }) => {
+const PlaylistItem = ({ song, setMetadataIndex, playerSong, setMetadataPlaylist, metadataPlaylist, index }) => {
   const { setPlaylistContext } = useContext(PlaylistContext);
   const { setPlayerMode } = useContext(PlayerModeContext);
   const playlistIcon = [
@@ -16,21 +16,18 @@ const PlaylistItem = ({ song, setMetadataIndex, playerSong, setMetadataPlaylist,
     {
       name: "faTrashCan",
       onClick: () => {
-        console.log(metadataPlaylist);
   const removedSong = metadataPlaylist.find(
     (item) => item.id === song.id
   );
 
   console.log("Entfernt:", removedSong);
-  // Das Removen vom letzten Lied muss dann auch den Reactplayer sagen dass es nichtsmehr gibt und gestoppt werden
 
   const updatedPlaylist = metadataPlaylist.filter(
     (item) => item.id !== song.id
   );
 
   setMetadataPlaylist(updatedPlaylist);
-  console.log(updatedPlaylist);
-  
+
   setMetadataIndex(0);
   if(updatedPlaylist.length < 1){
     setPlaylistContext([]);
@@ -49,10 +46,12 @@ const PlaylistItem = ({ song, setMetadataIndex, playerSong, setMetadataPlaylist,
       },
     },
   ];
+  
   return (
     <>
       <li
         draggable
+        data-index={index}
         onDragStart={(e) => {
           e.dataTransfer.setData("text/plain", JSON.stringify(song));
         }}
