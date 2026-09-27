@@ -1,16 +1,22 @@
+import { useContext } from "react";
 import Icon from "../components/Icon";
+import { PlaylistContext } from "../context/PlaylistContext";
+import { PlayerModeContext } from "../context/PlayerModeContext";
 
 const PlaylistItem = ({ song, setMetadataIndex, playerSong, setMetadataPlaylist, metadataPlaylist }) => {
+  const { setPlaylistContext } = useContext(PlaylistContext);
+  const { setPlayerMode } = useContext(PlayerModeContext);
   const playlistIcon = [
     {
       name: "faHandPointer",
       onClick: () => {
-        console.log(`Click`);
+        console.log("klick");
       },
     },
     {
       name: "faTrashCan",
       onClick: () => {
+        console.log(metadataPlaylist);
   const removedSong = metadataPlaylist.find(
     (item) => item.id === song.id
   );
@@ -23,7 +29,17 @@ const PlaylistItem = ({ song, setMetadataIndex, playerSong, setMetadataPlaylist,
   );
 
   setMetadataPlaylist(updatedPlaylist);
+  console.log(updatedPlaylist);
+  
   setMetadataIndex(0);
+  if(updatedPlaylist.length < 1){
+    setPlaylistContext([]);
+    setMetadataPlaylist([])
+    setPlayerMode({
+    mode: "",
+    play: false,
+  })
+  }
 }
     },
     {
@@ -33,7 +49,6 @@ const PlaylistItem = ({ song, setMetadataIndex, playerSong, setMetadataPlaylist,
       },
     },
   ];
-
   return (
     <>
       <li

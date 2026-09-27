@@ -13,12 +13,12 @@ const PlaylistView = ({
   const { playlistContext } = useContext(PlaylistContext);
 
   const playlist =
-    metadataPlaylist.length > 0
-      ? metadataPlaylist
-      : playlistContext
-        ? [playlistContext]
-        : [];
-
+  metadataPlaylist.length > 0
+    ? metadataPlaylist
+    : playlistContext.length > 0
+      ? playlistContext
+      : [];
+      
   if (playlist.length === 0) {
     return null;
   }

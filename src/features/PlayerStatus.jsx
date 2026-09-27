@@ -12,7 +12,6 @@ const PlayerStatus = ({
     return <h2>{playerSong.name}</h2>;
   }
 
-  return <div>Loading</div>;
 };
 
 export default PlayerStatus;
