@@ -9,9 +9,9 @@ import PlaylistView from "./PlaylistView";
 import PlayerStatus from "./PlayerStatus";
 import { handleLoadedMetadata } from "../utils/playerFunctions";
 import { useLocation } from "react-router-dom";
-import { onDrop } from "../utils/dragNDrop";
 import { onEnded } from "../utils/onEnded";
 import { onError } from "../utils/onError";
+import SavedPlaylist from "./SavedPlaylist";
 
 const Player = ({
   checkStatus,
@@ -21,7 +21,7 @@ const Player = ({
 }) => {
   const { playerMode, setPlayerMode } = useContext(PlayerModeContext);
   const { playlistContext, setPlaylistContext } = useContext(PlaylistContext);
-  const { localeStorageContext, setLocaleStorageContext } =
+  const { localeStorageContext } =
     useContext(LocaleStorageContext);
 
   const location = useLocation();
@@ -32,9 +32,6 @@ const Player = ({
   const [volume, setVolume] = useState(0.2);
   const [loop, setLoop] = useState(false);
   const [shuffle, setShuffle] = useState(false);
-
-  const [dropPosition, setDropPosition] = useState(null);
-
   const [metadataIndex, setMetadataIndex] = useState(0);
 
   const [collectingPlaylist, setCollectingPlaylist] = useState(false);
@@ -158,43 +155,7 @@ const Player = ({
             setMetadataPlaylist={setMetadataPlaylist}
           />
           Listen
-          {/* Drag und Drop klappt noch nicht ganz */}
-          {localeStorageContext.playlist.map((playlist) => (
-            <div
-              key={playlist.id}
-              onDragOver={(e) => {
-                e.preventDefault();
-              }}
-              onDrop={(e) => {
-                onDrop(e, setLocaleStorageContext, playlist, dropPosition);
-              }}
-            >
-              <h2>{playlist.title}</h2>
-
-              <ul>
-                {playlist.songs.map((song, index) => (
-                  <li
-                    key={song.id}
-                    data-index={index}
-                    onDragOver={(e) => {
-                      e.preventDefault();
-
-                      const rect = e.currentTarget.getBoundingClientRect();
-
-                      const insertIndex =
-                        e.clientY < rect.top + rect.height / 2
-                          ? index
-                          : index + 1;
-
-                      setDropPosition(insertIndex)
-                    }}
-                  >
-                    {song.name}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          <SavedPlaylist />
         </>
       ) : (
         <></>

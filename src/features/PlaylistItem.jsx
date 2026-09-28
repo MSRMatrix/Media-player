@@ -39,12 +39,6 @@ const PlaylistItem = ({ song, setMetadataIndex, playerSong, setMetadataPlaylist,
   }
 }
     },
-    {
-      name: "faGripLinesVertical",
-      onClick: () => {
-        console.log(`Grab`);
-      },
-    },
   ];
   
   return (
@@ -53,8 +47,14 @@ const PlaylistItem = ({ song, setMetadataIndex, playerSong, setMetadataPlaylist,
         draggable
         data-index={index}
         onDragStart={(e) => {
-          e.dataTransfer.setData("text/plain", JSON.stringify(song));
-        }}
+  e.dataTransfer.setData(
+    "text/plain",
+    JSON.stringify({
+      song,
+      sourcePlaylistId: null,
+    }),
+  );
+}}
         onClick={() => setMetadataIndex(song.id)}
         data-url={song.url}
         value={song.url}
