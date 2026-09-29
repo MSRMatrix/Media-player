@@ -12,19 +12,21 @@ import { useLocation } from "react-router-dom";
 import { onEnded } from "../utils/onEnded";
 import { onError } from "../utils/onError";
 import SavedPlaylist from "./SavedPlaylist";
+import { PlayerContext } from "../context/PlayerContext";
 
 const Player = ({
-  checkStatus,
-  setCheckStatus,
   metadataPlaylist,
   setMetadataPlaylist,
 }) => {
   const { playerMode, setPlayerMode } = useContext(PlayerModeContext);
   const { playlistContext, setPlaylistContext } = useContext(PlaylistContext);
+  const { playerState, setPlayerState } = useContext(PlayerContext);
   const { localeStorageContext } =
     useContext(LocaleStorageContext);
 
   const location = useLocation();
+
+  // Muss Loop und alles erstzen und playerMode löschen
 
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -84,7 +86,6 @@ const Player = ({
           handleLoadedMetadata(
             e,
             setPlaylistContext,
-            setCheckStatus,
             collectingPlaylist,
             setMetadataPlaylist,
             metadataIndex,
@@ -92,7 +93,6 @@ const Player = ({
             setMetadataIndex,
             setCollectingPlaylist,
             setPlayerMode,
-            playlistContext,
           )
         }
         onDurationChange={(e) => {
@@ -114,7 +114,7 @@ const Player = ({
         playing={playerMode.play && !collectingPlaylist}
         loop={false}
         onError={(error) => {
-          onError(error, setCheckStatus);
+          onError(error);
         }}
       />
 
@@ -144,6 +144,7 @@ const Player = ({
         playerSong={playerSong}
       />
 
+{/* Muss in MediaInput verschoben werden */}
       {playerMode.mode === "test" ? (
         <>
           <PlaylistView
@@ -167,6 +168,8 @@ const Player = ({
       ) : (
         <></>
       )}
+      {/* Muss in MediaInput verschoben werden */}
+
     </div>
   );
 };

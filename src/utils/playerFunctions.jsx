@@ -1,7 +1,6 @@
 export const handleLoadedMetadata = (
   e,
   setPlaylistContext,
-  setCheckStatus,
   collectingPlaylist,
   setMetadataPlaylist,
   metadataIndex,
@@ -9,7 +8,6 @@ export const handleLoadedMetadata = (
   setMetadataIndex,
   setCollectingPlaylist,
   setPlayerMode,
-  playlistContext
 ) => {
 
   const api = e.srcElement.api;
@@ -20,7 +18,6 @@ export const handleLoadedMetadata = (
     ...prev,
     name: title,
   }));
-  setCheckStatus("ready");
 
   if (collectingPlaylist) {
     setMetadataPlaylist((prev) =>

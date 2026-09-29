@@ -1,12 +1,10 @@
 import { useContext } from "react";
 import Form from "../elements/Form";
 import { PlaylistContext } from "../context/PlaylistContext";
-import { PlayerModeContext } from "../context/PlayerModeContext";
 import { mediaInputArray } from "../config/mediaInputArray";
 
 const MediaInput = () => {
   const { setPlaylistContext } = useContext(PlaylistContext);
-  const { playerMode } = useContext(PlayerModeContext);
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -31,8 +29,34 @@ const MediaInput = () => {
         text="Musik überprüfen"
         id="music-check-form"
         className={""}
-        formarray={mediaInputArray}
-      />
+        formarray={mediaInputArray} 
+        
+       
+      /> 
+{/*       
+      {playerMode.mode === "test" ? (
+        <>
+          <PlaylistView
+            metadataPlaylist={metadataPlaylist}
+            metadataIndex={metadataIndex}
+            setMetadataIndex={setMetadataIndex}
+            playerSong={playerSong}
+            collectingPlaylist={collectingPlaylist}
+            setMetadataPlaylist={setMetadataPlaylist}
+          />
+          Listen
+          <SavedPlaylist />
+        </>
+      ) : (
+        <></>
+      )}
+
+      {location.pathname === `/music-check` ||
+      location.pathname === `/lists` ? (
+        <CreatePlaylist />
+      ) : (
+        <></>
+      )} */}
     </>
   );
 };

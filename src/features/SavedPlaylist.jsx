@@ -3,8 +3,6 @@ import { LocaleStorageContext } from "../context/LocaleStorageContext";
 import { onDragOver, onDrop } from "../utils/dragNDrop";
 import Icon from "../components/Icon";
 
-// onDrop muss abgeändert werden
-
 const SavedPlaylist = () => {
   const [dropPosition, setDropPosition] = useState(null);
 

@@ -12,6 +12,7 @@ import NotFound from "./pages/NotFound";
 import { PlayerModeContext } from "./context/PlayerModeContext";
 import { LocaleStorageContext } from "./context/LocaleStorageContext";
 import MediaInput from "./pages/MediaInput"
+import { PlayerContext } from "./context/PlayerContext";
 
 function App() {
   const [playlistContext, setPlaylistContext] = useState([]);
@@ -19,6 +20,25 @@ function App() {
     mode: "",
     play: false,
   });
+
+   const [playerState, setPlayerState] = useState({
+    mode: "",
+    play: false,
+    progress: 0,
+    duration: 0,
+    playbackRate: 1,
+    volume: 0.2,
+    loop: false,
+    shuffle: false,
+    metadataIndex: 0,
+    collectingPlaylist: false,
+  });
+
+//   const [playlistState, setPlaylistState] = useState({
+//   playlist: [],
+//   metadataPlaylist: [],
+// });
+
 
 const [localeStorageContext, setLocaleStorageContext] = useState(() => {
   const savedPlaylist = localStorage.getItem("playlist");
@@ -86,17 +106,15 @@ const [localeStorageContext, setLocaleStorageContext] = useState(() => {
   ]);
   return (
     <>
-      <LocaleStorageContext.Provider
-        value={{ localeStorageContext, setLocaleStorageContext }}
-      >
+    <PlayerContext.Provider value={{playerState, setPlayerState}}>
+      <LocaleStorageContext.Provider value={{ localeStorageContext, setLocaleStorageContext }}>
         <PlayerModeContext.Provider value={{ playerMode, setPlayerMode }}>
-          <PlaylistContext.Provider
-            value={{ playlistContext, setPlaylistContext }}
-          >
+          <PlaylistContext.Provider value={{ playlistContext, setPlaylistContext }}>
             <RouterProvider router={router} />
           </PlaylistContext.Provider>
         </PlayerModeContext.Provider>
       </LocaleStorageContext.Provider>
+      </PlayerContext.Provider>
     </>
   );
 }
