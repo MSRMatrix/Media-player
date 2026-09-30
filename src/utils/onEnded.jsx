@@ -1,26 +1,33 @@
-export function onEnded(loop, playerRef, metadataPlaylist, setPlayerMode, shuffle, setMetadataIndex){
-     if (loop) {
-            playerRef.current?.api?.seekTo(0, "seconds");
-            return;
-          }
+export function onEnded(
+  playerRef,
+  playerState,
+  setPlayerState,
+  playlistContext
+) {
+  if (playerState.loop) {
+    playerRef.current?.api?.seekTo(0, "seconds");
+    return;
+  }
 
-          if (metadataPlaylist.length <= 1) {
-            setPlayerMode((prev) => ({
-              ...prev,
-              play: false,
-            }));
-            return;
-          }
+  if (playlistContext.metadataPlaylist.length <= 1) {
+    setPlayerState((prev) => ({
+      ...prev,
+      play: false,
+    }));
+    return;
+  }
 
-          if (shuffle) {
-            setMetadataIndex(
-              Math.floor(Math.random() * metadataPlaylist.length),
-            );
+  if (playerState.shuffle) {
+    setPlayerState((prev) => ({
+      ...prev,
+      metadataIndex: Math.floor(Math.random() * playlistContext.metadataPlaylist.length),
+    }));
 
-            return;
-          }
-
-          setMetadataIndex((prev) =>
-            prev + 1 >= metadataPlaylist.length ? 0 : prev + 1,
-          );
+    return;
+  }
+  setPlayerState((prev) => ({
+    ...prev,
+    metadataIndex:
+      prev.metadataIndex + 1 >= playlistContext.metadataPlaylist.length ? 0 : prev + 1,
+  }));
 }

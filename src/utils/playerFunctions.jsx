@@ -1,14 +1,11 @@
 export const handleLoadedMetadata = (
   e,
   setPlaylistContext,
-  collectingPlaylist,
-  setMetadataPlaylist,
-  metadataIndex,
-  metadataPlaylist,
-  setMetadataIndex,
-  setCollectingPlaylist,
-  setPlayerMode,
+  playerState, 
+  setPlayerState,
+  playlistContext,
 ) => {
+console.log(`test`);
 
   const api = e.srcElement.api;
 
@@ -19,31 +16,33 @@ export const handleLoadedMetadata = (
     name: title,
   }));
 
-  if (collectingPlaylist) {
-    setMetadataPlaylist((prev) =>
-      prev.map((item, index) =>
-        index === metadataIndex
-          ? {
-              ...item,
-              name: title,
-            }
-          : item,
-      ),
-    );
+  if (playerState.collectingPlaylist) {
 
-    if (metadataIndex < metadataPlaylist.length - 1) {
+    setPlaylistContext((prev) => ({
+  ...prev,
+  metadataPlaylist: prev.metadataPlaylist.map((item, index) =>
+    index === playerState.metadataIndex
+      ? {
+          ...item,
+          name: title,
+        }
+      : item,
+  ),
+}));
+
+    if (playerState.metadataIndex < playlistContext.metadataPlaylist.length - 1) {
       setTimeout(() => {
-        setMetadataIndex((prev) => prev + 1);
+        setPlayerState((prev) => ({...prev, metadataIndex: prev.metadataIndex + 1}))
       }, 200);
     } else {
-      setCollectingPlaylist(false);
-      setMetadataIndex(0);
+      setPlayerState((prev) => ({...prev, metadataIndex: 0}))
+      setPlayerState((prev) => ({...prev, collectingPlaylist: false}))
     }
 
     return;
   }
 
-  setPlayerMode((prev) => ({
+  setPlayerState((prev) => ({
     ...prev,
     mode: "test",
   }));
@@ -51,7 +50,7 @@ export const handleLoadedMetadata = (
   const playlist = api.playerInfo?.playlist;
 
   if (!playlist) {
-    setPlayerMode((prev) => ({
+    setPlayerState((prev) => ({
       ...prev,
       play: true,
     }));
@@ -70,7 +69,7 @@ export const handleLoadedMetadata = (
     name: title,
   }));
 
-  setPlayerMode((prev) => ({
+  setPlayerState((prev) => ({
     ...prev,
     play: true,
   }));
@@ -80,19 +79,15 @@ export const handleLoadedMetadata = (
 
   startPlaylistCollection(
     playlist,
-    setMetadataPlaylist,
-    setMetadataIndex,
-    setCollectingPlaylist,
-    setPlayerMode,
+    setPlaylistContext,
+    setPlayerState
   );
 };
 
 const startPlaylistCollection = (
   playlist,
-  setMetadataPlaylist,
-  setMetadataIndex,
-  setCollectingPlaylist,
-  setPlayerMode,
+  setPlaylistContext,
+  setPlayerState
 ) => {
   const newPlaylist = playlist.map((videoId, index) => ({
     name: "",
@@ -100,11 +95,7 @@ const startPlaylistCollection = (
     id: index,
   }));
 
-  setMetadataPlaylist(newPlaylist);
-  setMetadataIndex(0);
-  setCollectingPlaylist(true);
-  setPlayerMode((prev) => ({
-    ...prev,
-    play: false,
-  }));
+  setPlaylistContext((prev) => ({...prev, metadataPlaylist: newPlaylist}))
+  setPlayerState((prev) => ({...prev, metadataIndex: 0, collectingPlaylist: true, play: false,
+  }))
 };

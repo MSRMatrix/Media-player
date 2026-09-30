@@ -1,20 +1,18 @@
 import { useContext } from "react";
 import { PlaylistContext } from "../context/PlaylistContext";
 import PlaylistItem from "./PlaylistItem";
+import { PlayerContext } from "../context/PlayerContext";
 
 const PlaylistView = ({
-  metadataPlaylist,
-  metadataIndex,
-  setMetadataIndex,
   playerSong,
-  collectingPlaylist,
-  setMetadataPlaylist,
 }) => {
+
+    const { playerState } = useContext(PlayerContext);
   const { playlistContext } = useContext(PlaylistContext);
 
   const playlist =
-  metadataPlaylist.length > 0
-    ? metadataPlaylist
+  playlistContext.metadataPlaylist.length > 0
+    ? playlistContext.metadataPlaylist
     : playlistContext.length > 0
       ? playlistContext
       : [];
@@ -27,19 +25,16 @@ const PlaylistView = ({
     <>
       {playlist.length > 1 && (
         <div>
-          {metadataIndex + 1}/{playlist.length}
+          {playerState.metadataIndex + 1}/{playlist.length}
         </div>
       )}
 
-      {!collectingPlaylist ? (
+      {!playerState.collectingPlaylist ? (
         playlist.map((song, index) => (
           <PlaylistItem
             key={song.id}
             song={song}
-            setMetadataIndex={setMetadataIndex}
             playerSong={playerSong}
-            setMetadataPlaylist={setMetadataPlaylist}
-            metadataPlaylist={metadataPlaylist}
             index={index}
           />
         ))

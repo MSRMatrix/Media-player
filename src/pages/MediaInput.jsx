@@ -10,11 +10,14 @@ const MediaInput = () => {
     e.preventDefault();
     const url = e.target.elements.url.value;
     try {
-      setPlaylistContext({
-        name: "",
-        url: url,
-        id: 0,
-      });
+      setPlaylistContext((prev) => ({
+        ...prev,
+        currentSong: {
+          name: "",
+          url: url,
+          id: 0,
+        },
+      }));
     } catch (error) {
       console.log("Ungültige URL:", error);
     } finally {

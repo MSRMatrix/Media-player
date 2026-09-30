@@ -1,19 +1,17 @@
 import { Outlet } from "react-router-dom";
 import Navigation from "../components/navigation/Navigation";
 import Footer from "../components/footer/Footer";
-import { useState } from "react";
 import Player from "../features/Player";
 
 const AppShell = () => {
-  const [metadataPlaylist, setMetadataPlaylist] = useState([]);
   return (
     <>
       <nav>
-        <Navigation setMetadataPlaylist={setMetadataPlaylist}/>
+        <Navigation />
       </nav>
       <main>
         <section>
-          <Player metadataPlaylist={metadataPlaylist} setMetadataPlaylist={setMetadataPlaylist}  />
+          <Player />
         </section>
         <section>
           <Outlet />

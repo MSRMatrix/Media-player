@@ -9,19 +9,17 @@ import ImportExport from "./pages/ImportExport";
 import Tutorial from "./pages/Tutorial";
 import Youtube from "./pages/Youtube";
 import NotFound from "./pages/NotFound";
-import { PlayerModeContext } from "./context/PlayerModeContext";
 import { LocaleStorageContext } from "./context/LocaleStorageContext";
-import MediaInput from "./pages/MediaInput"
+import MediaInput from "./pages/MediaInput";
 import { PlayerContext } from "./context/PlayerContext";
 
 function App() {
-  const [playlistContext, setPlaylistContext] = useState([]);
-  const [playerMode, setPlayerMode] = useState({
-    mode: "",
-    play: false,
+  const [playlistContext, setPlaylistContext] = useState({
+    currentSong: null,
+    metadataPlaylist: [],
   });
 
-   const [playerState, setPlayerState] = useState({
+  const [playerState, setPlayerState] = useState({
     mode: "",
     play: false,
     progress: 0,
@@ -34,35 +32,34 @@ function App() {
     collectingPlaylist: false,
   });
 
-//   const [playlistState, setPlaylistState] = useState({
-//   playlist: [],
-//   metadataPlaylist: [],
-// });
+  //   const [playlistState, setPlaylistState] = useState({
+  //   playlist: [],
+  //   metadataPlaylist: [],
+  // });
 
+  const [localeStorageContext, setLocaleStorageContext] = useState(() => {
+    const savedPlaylist = localStorage.getItem("playlist");
 
-const [localeStorageContext, setLocaleStorageContext] = useState(() => {
-  const savedPlaylist = localStorage.getItem("playlist");
+    if (savedPlaylist) {
+      return {
+        playlist: JSON.parse(savedPlaylist),
+      };
+    }
 
-  if (savedPlaylist) {
+    const initialPlaylist = [
+      {
+        id: crypto.randomUUID(),
+        title: "Neue Playlist",
+        songs: [],
+      },
+    ];
+
+    localStorage.setItem("playlist", JSON.stringify(initialPlaylist));
+
     return {
-      playlist: JSON.parse(savedPlaylist),
+      playlist: initialPlaylist,
     };
-  }
-
-  const initialPlaylist = [
-    {
-      id: crypto.randomUUID(),
-      title: "Neue Playlist",
-      songs: [],
-    },
-  ];
-
-  localStorage.setItem("playlist", JSON.stringify(initialPlaylist));
-
-  return {
-    playlist: initialPlaylist,
-  };
-});
+  });
 
   const router = createBrowserRouter([
     {
@@ -106,14 +103,16 @@ const [localeStorageContext, setLocaleStorageContext] = useState(() => {
   ]);
   return (
     <>
-    <PlayerContext.Provider value={{playerState, setPlayerState}}>
-      <LocaleStorageContext.Provider value={{ localeStorageContext, setLocaleStorageContext }}>
-        <PlayerModeContext.Provider value={{ playerMode, setPlayerMode }}>
-          <PlaylistContext.Provider value={{ playlistContext, setPlaylistContext }}>
+      <PlayerContext.Provider value={{ playerState, setPlayerState }}>
+        <LocaleStorageContext.Provider
+          value={{ localeStorageContext, setLocaleStorageContext }}
+        >
+          <PlaylistContext.Provider
+            value={{ playlistContext, setPlaylistContext }}
+          >
             <RouterProvider router={router} />
           </PlaylistContext.Provider>
-        </PlayerModeContext.Provider>
-      </LocaleStorageContext.Provider>
+        </LocaleStorageContext.Provider>
       </PlayerContext.Provider>
     </>
   );

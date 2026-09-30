@@ -1,11 +1,11 @@
 import { useContext } from "react";
 import Icon from "../components/Icon";
 import { PlaylistContext } from "../context/PlaylistContext";
-import { PlayerModeContext } from "../context/PlayerModeContext";
+import { PlayerContext } from "../context/PlayerContext";
 
-const PlaylistItem = ({ song, setMetadataIndex, playerSong, setMetadataPlaylist, metadataPlaylist, index }) => {
-  const { setPlaylistContext } = useContext(PlaylistContext);
-  const { setPlayerMode } = useContext(PlayerModeContext);
+const PlaylistItem = ({ song, playerSong, index }) => {
+  const { playlistContext, setPlaylistContext } = useContext(PlaylistContext);
+    const { setPlayerState } = useContext(PlayerContext);
   const playlistIcon = [
     {
       name: "faHandPointer",
@@ -16,23 +16,29 @@ const PlaylistItem = ({ song, setMetadataIndex, playerSong, setMetadataPlaylist,
     {
       name: "faTrashCan",
       onClick: () => {
-  const removedSong = metadataPlaylist.find(
+  const removedSong = playlistContext.metadataPlaylist.find(
     (item) => item.id === song.id
   );
 
   console.log("Entfernt:", removedSong);
 
-  const updatedPlaylist = metadataPlaylist.filter(
+  const updatedPlaylist = playlistContext.metadataPlaylist.filter(
     (item) => item.id !== song.id
   );
 
-  setMetadataPlaylist(updatedPlaylist);
+  setPlaylistContext((prev) => ({...prev, metadataPlaylist: updatedPlaylist}))
 
-  setMetadataIndex(0);
+  setPlayerState((prev) => ({
+  ...prev,             
+  metadataIndex: 0      
+}));
+
   if(updatedPlaylist.length < 1){
-    setPlaylistContext([]);
-    setMetadataPlaylist([])
-    setPlayerMode({
+    setPlaylistContext([{
+      currentSong: null,
+      metadataPlaylist: []
+   } ])
+    setPlayerState({
     mode: "",
     play: false,
   })
@@ -55,7 +61,10 @@ const PlaylistItem = ({ song, setMetadataIndex, playerSong, setMetadataPlaylist,
     }),
   );
 }}
-        onClick={() => setMetadataIndex(song.id)}
+        onClick={() => setPlayerState((prev) => ({
+  ...prev,             
+  metadataIndex: song.id   
+}))}
         data-url={song.url}
         value={song.url}
         style={{ background: playerSong.url === song.url ? "red" : "" }}

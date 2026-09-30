@@ -1,14 +1,18 @@
+import { useContext } from "react";
+import { PlayerContext } from "../context/PlayerContext";
+
 const PlayerStatus = ({
-  collectingPlaylist,
-  playerMode,
   playerSong
 }) => {
 
-  if (collectingPlaylist) {
+
+  const { playerState } = useContext(PlayerContext);
+
+  if (playerState.collectingPlaylist) {
     return <div>Loading</div>;
   }
 
-  if (playerMode.mode === "test" && playerSong.name) {
+  if (playerState.mode === "test" && playerSong.name) {
     return <h2>{playerSong.name}</h2>;
   }
 

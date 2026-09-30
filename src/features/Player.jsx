@@ -1,7 +1,6 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef } from "react";
 import ReactPlayer from "react-player";
 import { PlaylistContext } from "../context/PlaylistContext";
-import { PlayerModeContext } from "../context/PlayerModeContext";
 import { LocaleStorageContext } from "../context/LocaleStorageContext";
 import CreatePlaylist from "./CreatePlaylist";
 import PlaylistControls from "./PlaylistControls";
@@ -14,57 +13,44 @@ import { onError } from "../utils/onError";
 import SavedPlaylist from "./SavedPlaylist";
 import { PlayerContext } from "../context/PlayerContext";
 
-const Player = ({
-  metadataPlaylist,
-  setMetadataPlaylist,
-}) => {
-  const { playerMode, setPlayerMode } = useContext(PlayerModeContext);
+const Player = () => {
   const { playlistContext, setPlaylistContext } = useContext(PlaylistContext);
   const { playerState, setPlayerState } = useContext(PlayerContext);
-  const { localeStorageContext } =
-    useContext(LocaleStorageContext);
+  const { localeStorageContext } = useContext(LocaleStorageContext);
 
   const location = useLocation();
 
   // Muss Loop und alles erstzen und playerMode löschen
 
-  const [progress, setProgress] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [playbackRate, setPlaybackRate] = useState(1);
-  const [volume, setVolume] = useState(0.2);
-  const [loop, setLoop] = useState(false);
-  const [shuffle, setShuffle] = useState(false);
-  const [metadataIndex, setMetadataIndex] = useState(0);
-
-  const [collectingPlaylist, setCollectingPlaylist] = useState(false);
-
   const playerRef = useRef(null);
 
   useEffect(() => {
-    if (collectingPlaylist) return;
+    if (playerState.collectingPlaylist) return;
 
-    if (metadataPlaylist.length === 0) return;
+    if (playlistContext.metadataPlaylist.length === 0) return;
 
-    const complete = metadataPlaylist.every((item) => item.name !== "");
+    const complete = playlistContext.metadataPlaylist.every(
+      (item) => item.name !== "",
+    );
 
     if (!complete) return;
 
-    setPlaylistContext(metadataPlaylist);
+    setPlaylistContext((prev) => ({
+      ...prev,
+      currentSong: prev.metadataPlaylist[0],
+    }));
 
-    setPlayerMode((prev) => ({
+    setPlayerState((prev) => ({
       ...prev,
       play: true,
+      loop: false,
     }));
-    setLoop(false);
-  }, [collectingPlaylist, metadataPlaylist]);
+  }, [playerState.collectingPlaylist, playlistContext.metadataPlaylist]);
 
-  const metadataSong = metadataPlaylist[metadataIndex];
-
-  const playerSong = collectingPlaylist
-    ? metadataSong
-    : !playlistContext[metadataIndex]
-      ? playlistContext
-      : playlistContext[metadataIndex];
+  const playerSong =
+  playlistContext.metadataPlaylist.length > 0
+    ? playlistContext.metadataPlaylist[playerState.metadataIndex]
+    : playlistContext.currentSong;
 
   useEffect(() => {
     localStorage.setItem(
@@ -76,85 +62,50 @@ const Player = ({
   return (
     <div>
       <ReactPlayer
-        style={{ display: !collectingPlaylist ? "" : "none" }}
+        style={{ display: !playerState.collectingPlaylist ? "" : "none" }}
         ref={playerRef}
         src={playerSong?.url}
-        volume={volume}
-        playbackRate={playbackRate}
+        volume={playerState.volume}
+        playbackRate={playerState.playbackRate}
         onWaiting={() => console.log("test")}
         onLoadedMetadata={(e) =>
           handleLoadedMetadata(
             e,
             setPlaylistContext,
-            collectingPlaylist,
-            setMetadataPlaylist,
-            metadataIndex,
-            metadataPlaylist,
-            setMetadataIndex,
-            setCollectingPlaylist,
-            setPlayerMode,
+            playerState,
+            setPlayerState,
+            playlistContext,
           )
         }
         onDurationChange={(e) => {
-          setDuration(e.currentTarget.duration);
+          const duration = e.currentTarget.duration;
+          setPlayerState((prev) => ({
+            ...prev,
+            duration,
+          }));
         }}
         onTimeUpdate={(e) => {
-          setProgress(e.currentTarget.currentTime);
+          const progress = e.currentTarget.currentTime;
+          setPlayerState((prev) => ({ ...prev, progress: progress }));
         }}
         onEnded={() => {
-          onEnded(
-            loop,
-            playerRef,
-            metadataPlaylist,
-            setPlayerMode,
-            shuffle,
-            setMetadataIndex,
-          );
+          onEnded(playerRef, playerState, setPlayerState, playlistContext);
         }}
-        playing={playerMode.play && !collectingPlaylist}
+        playing={playerState.play && !playerState.collectingPlaylist}
         loop={false}
         onError={(error) => {
           onError(error);
         }}
       />
 
-      <PlaylistControls
-        playerRef={playerRef}
-        progress={progress}
-        setProgress={setProgress}
-        duration={duration}
-        setDuration={setDuration}
-        playbackRate={playbackRate}
-        setPlaybackRate={setPlaybackRate}
-        volume={volume}
-        setVolume={setVolume}
-        metadataIndex={metadataIndex}
-        setMetadataIndex={setMetadataIndex}
-        metadataPlaylist={metadataPlaylist}
-        playerSong={playerSong}
-        loop={loop}
-        setLoop={setLoop}
-        shuffle={shuffle}
-        setShuffle={setShuffle}
-      />
+      <PlaylistControls playerRef={playerRef} playerSong={playerSong} />
 
-      <PlayerStatus
-        collectingPlaylist={collectingPlaylist}
-        playerMode={playerMode}
-        playerSong={playerSong}
-      />
+      <PlayerStatus playerSong={playerSong} />
 
-{/* Muss in MediaInput verschoben werden */}
-      {playerMode.mode === "test" ? (
+      {/* Muss in MediaInput verschoben werden */}
+      {playerState.mode === "test" ? (
         <>
-          <PlaylistView
-            metadataPlaylist={metadataPlaylist}
-            metadataIndex={metadataIndex}
-            setMetadataIndex={setMetadataIndex}
-            playerSong={playerSong}
-            collectingPlaylist={collectingPlaylist}
-            setMetadataPlaylist={setMetadataPlaylist}
-          />
+          <PlaylistView playerSong={playerSong} />
           Listen
           <SavedPlaylist />
         </>
@@ -169,7 +120,6 @@ const Player = ({
         <></>
       )}
       {/* Muss in MediaInput verschoben werden */}
-
     </div>
   );
 };
