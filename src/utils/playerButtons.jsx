@@ -15,7 +15,6 @@ function durationProgress(progress, duration) {
 }
 
 export const createPlayerButtons = ({
-  playerSong,
     playerState, 
     setPlayerState,
     playlistContext
@@ -23,19 +22,19 @@ export const createPlayerButtons = ({
   {
     element: "button",
     iconName: "faBackward",
-    disabled: playlistContext.metadataPlaylist.length > 1 ? false : true,
+    disabled: playlistContext.length > 1 ? false : true,
     id: "previous",
     text: "Previous",
     onClick: () => {
       if (playerState.shuffle) {
-        setPlayerState((prev) => ({...prev, metadataIndex: Math.floor(Math.random() * playlistContext.metadataPlaylist.length)}))
+        setPlayerState((prev) => ({...prev, metadataIndex: Math.floor(Math.random() * playlistContext.length)}))
        return;
       }
       
       setPlayerState((prev) => ({
   ...prev,
   metadataIndex: prev.metadataIndex === 0
-    ? playlistContext.metadataPlaylist.length - 1  
+    ? playlistContext.length - 1  
     : prev.metadataIndex - 1     
 }))
     },
@@ -43,7 +42,7 @@ export const createPlayerButtons = ({
   {
     element: "button",
     iconName: !playerState.play ? "faPlay" : "faPause",
-    disabled: playerSong?.url ? false : true,
+    disabled: playlistContext[playerState.metadataIndex]?.url || playlistContext?.url ? false : true,
     id: !playerState.play ? "play" : "pause",
     text: !playerState.play ? "Play" : "Pause",
     onClick: () =>
@@ -55,16 +54,16 @@ export const createPlayerButtons = ({
   {
     element: "button",
     iconName: "faForward",
-    disabled: playlistContext.metadataPlaylist.length > 1 ? false : true,
+    disabled: playlistContext.length > 1 ? false : true,
     id: "next",
     text: "Next",
     onClick: () => {
       if (playerState.shuffle) {
-        setPlayerState((prev) => ({...prev, metadataIndex: Math.floor(Math.random() * playlistContext.metadataPlaylist.length)}))
+        setPlayerState((prev) => ({...prev, metadataIndex: Math.floor(Math.random() * playlistContext.length)}))
       
         return;
       }
-      playlistContext.metadataPlaylist.length === playerState.metadataIndex + 1
+      playlistContext.length === playerState.metadataIndex + 1
         ? setPlayerState((prev) => ({...prev, metadataIndex: 0}))
       
         : setPlayerState((prev) => ({...prev, metadataIndex: prev.metadataIndex + 1}))
@@ -108,7 +107,7 @@ export const createPlayerButtons = ({
   {
     element: "input",
     id: "progress",
-    disabled: !playerSong?.url ? true : false,
+    disabled: playlistContext[playerState.metadataIndex]?.url || playlistContext?.url ? true : false,
     text: durationProgress(playerState.progress, playerState.duration),
     rangeValue: playerState.progress,
     min: 0,
@@ -125,7 +124,7 @@ export const createPlayerButtons = ({
   {
     element: "button",
     iconName: playerState.shuffle ? "faShuffle" : "faLinkSlash",
-    disabled: playlistContext.metadataPlaylist.length > 1 ? false : true,
+    disabled: playlistContext.length > 1 ? false : true,
     id: "shuffle",
     text: "Shuffle",
     onClick: () => setPlayerState((prev) => ({...prev, shuffle: !prev.shuffle}))

@@ -1,4 +1,3 @@
-export function onError(error, setCheckStatus) {
-  setCheckStatus("error");
+export function onError(error) {
   console.log("Fehler:", error);
 }

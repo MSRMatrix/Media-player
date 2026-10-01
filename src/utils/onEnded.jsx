@@ -9,7 +9,7 @@ export function onEnded(
     return;
   }
 
-  if (playlistContext.metadataPlaylist.length <= 1) {
+  if (playlistContext.length <= 1) {
     setPlayerState((prev) => ({
       ...prev,
       play: false,
@@ -20,7 +20,7 @@ export function onEnded(
   if (playerState.shuffle) {
     setPlayerState((prev) => ({
       ...prev,
-      metadataIndex: Math.floor(Math.random() * playlistContext.metadataPlaylist.length),
+      metadataIndex: Math.floor(Math.random() * playlistContext.length),
     }));
 
     return;
@@ -28,6 +28,6 @@ export function onEnded(
   setPlayerState((prev) => ({
     ...prev,
     metadataIndex:
-      prev.metadataIndex + 1 >= playlistContext.metadataPlaylist.length ? 0 : prev + 1,
+      prev.metadataIndex + 1 >= playlistContext.length ? 0 : prev + 1,
   }));
 }

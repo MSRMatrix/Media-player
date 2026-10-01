@@ -14,10 +14,7 @@ import MediaInput from "./pages/MediaInput";
 import { PlayerContext } from "./context/PlayerContext";
 
 function App() {
-  const [playlistContext, setPlaylistContext] = useState({
-    currentSong: null,
-    metadataPlaylist: [],
-  });
+  const [playlistContext, setPlaylistContext] = useState([]);
 
   const [playerState, setPlayerState] = useState({
     mode: "",

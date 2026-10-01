@@ -1,10 +1,10 @@
 import { useContext } from "react";
 import { PlayerContext } from "../context/PlayerContext";
+import { PlaylistContext } from "../context/PlaylistContext";
 
-const PlayerStatus = ({
-  playerSong
-}) => {
+const PlayerStatus = () => {
 
+  const { playlistContext } = useContext(PlaylistContext);
 
   const { playerState } = useContext(PlayerContext);
 
@@ -12,8 +12,8 @@ const PlayerStatus = ({
     return <div>Loading</div>;
   }
 
-  if (playerState.mode === "test" && playerSong.name) {
-    return <h2>{playerSong.name}</h2>;
+  if (playerState.mode === "test" && playlistContext[playerState.metadataIndex]?.name || playlistContext?.name) {
+    return <h2>{playlistContext[playerState.metadataIndex]?.name || playlistContext?.name}</h2>;
   }
 
 };

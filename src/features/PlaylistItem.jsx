@@ -3,9 +3,9 @@ import Icon from "../components/Icon";
 import { PlaylistContext } from "../context/PlaylistContext";
 import { PlayerContext } from "../context/PlayerContext";
 
-const PlaylistItem = ({ song, playerSong, index }) => {
+const PlaylistItem = ({ song, index }) => {
   const { playlistContext, setPlaylistContext } = useContext(PlaylistContext);
-    const { setPlayerState } = useContext(PlayerContext);
+    const { playerState, setPlayerState } = useContext(PlayerContext);
   const playlistIcon = [
     {
       name: "faHandPointer",
@@ -16,17 +16,17 @@ const PlaylistItem = ({ song, playerSong, index }) => {
     {
       name: "faTrashCan",
       onClick: () => {
-  const removedSong = playlistContext.metadataPlaylist.find(
+  const removedSong = playlistContext.find(
     (item) => item.id === song.id
   );
 
   console.log("Entfernt:", removedSong);
 
-  const updatedPlaylist = playlistContext.metadataPlaylist.filter(
+  const updatedPlaylist = playlistContext.filter(
     (item) => item.id !== song.id
   );
 
-  setPlaylistContext((prev) => ({...prev, metadataPlaylist: updatedPlaylist}))
+  setPlaylistContext(updatedPlaylist)
 
   setPlayerState((prev) => ({
   ...prev,             
@@ -34,10 +34,7 @@ const PlaylistItem = ({ song, playerSong, index }) => {
 }));
 
   if(updatedPlaylist.length < 1){
-    setPlaylistContext([{
-      currentSong: null,
-      metadataPlaylist: []
-   } ])
+    setPlaylistContext([])
     setPlayerState({
     mode: "",
     play: false,
@@ -67,7 +64,7 @@ const PlaylistItem = ({ song, playerSong, index }) => {
 }))}
         data-url={song.url}
         value={song.url}
-        style={{ background: playerSong.url === song.url ? "red" : "" }}
+        style={{ background: playlistContext[playerState.metadataIndex].url === song.url || playlistContext.url === song.url ? "red" : "" }}
       >
         {song.name}
       </li>

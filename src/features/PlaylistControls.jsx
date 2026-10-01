@@ -8,7 +8,6 @@ import { PlaylistContext } from "../context/PlaylistContext";
 
 const PlaylistControls = ({
   playerRef,
-  playerSong,
 }) => {
 const { playerState, setPlayerState } = useContext(PlayerContext);
 
@@ -22,7 +21,6 @@ const { playerState, setPlayerState } = useContext(PlayerContext);
   };
 
   const playerButtons = createPlayerButtons({
-    playerSong,
     playerState, 
     setPlayerState,
     playlistContext

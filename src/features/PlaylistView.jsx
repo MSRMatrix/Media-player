@@ -3,17 +3,13 @@ import { PlaylistContext } from "../context/PlaylistContext";
 import PlaylistItem from "./PlaylistItem";
 import { PlayerContext } from "../context/PlayerContext";
 
-const PlaylistView = ({
-  playerSong,
-}) => {
+const PlaylistView = () => {
 
     const { playerState } = useContext(PlayerContext);
   const { playlistContext } = useContext(PlaylistContext);
 
   const playlist =
-  playlistContext.metadataPlaylist.length > 0
-    ? playlistContext.metadataPlaylist
-    : playlistContext.length > 0
+  playlistContext.length > 0
       ? playlistContext
       : [];
       
@@ -34,7 +30,6 @@ const PlaylistView = ({
           <PlaylistItem
             key={song.id}
             song={song}
-            playerSong={playerSong}
             index={index}
           />
         ))

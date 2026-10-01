@@ -1,42 +1,41 @@
 export const handleLoadedMetadata = (
   e,
   setPlaylistContext,
-  playerState, 
+  playerState,
   setPlayerState,
   playlistContext,
 ) => {
-console.log(`test`);
-
   const api = e.srcElement.api;
 
   const title = api?.videoTitle || "";
 
-  setPlaylistContext((prev) => ({
-    ...prev,
-    name: title,
-  }));
+  console.log(api.playerInfo);
 
   if (playerState.collectingPlaylist) {
+    setPlaylistContext((prev) =>
+      prev.map((item, index) =>
+        index === playerState.metadataIndex
+          ? {
+              ...item,
+              name: title,
+            }
+          : item,
+      ),
+    );
 
-    setPlaylistContext((prev) => ({
-  ...prev,
-  metadataPlaylist: prev.metadataPlaylist.map((item, index) =>
-    index === playerState.metadataIndex
-      ? {
-          ...item,
-          name: title,
-        }
-      : item,
-  ),
-}));
-
-    if (playerState.metadataIndex < playlistContext.metadataPlaylist.length - 1) {
+    if (playerState.metadataIndex < playlistContext.length - 1) {
       setTimeout(() => {
-        setPlayerState((prev) => ({...prev, metadataIndex: prev.metadataIndex + 1}))
+        setPlayerState((prev) => ({
+          ...prev,
+          metadataIndex: prev.metadataIndex + 1,
+        }));
       }, 200);
     } else {
-      setPlayerState((prev) => ({...prev, metadataIndex: 0}))
-      setPlayerState((prev) => ({...prev, collectingPlaylist: false}))
+      setPlayerState((prev) => ({
+        ...prev,
+        metadataIndex: 0,
+        collectingPlaylist: false,
+      }));
     }
 
     return;
@@ -59,35 +58,38 @@ console.log(`test`);
   }
 
   const question = confirm("Do you want to copy the whole playlist?");
-  
+
   if (!question) {
-  const videoId = api.playerInfo.videoData.video_id;
-  
-  setPlaylistContext((prev) => ({
-    ...prev,
-    url: `https://www.youtube.com/watch?v=${videoId}`,
-    name: title,
-  }));
+    const videoId = api.playerInfo.videoData.video_id;
 
-  setPlayerState((prev) => ({
-    ...prev,
-    play: true,
-  }));
+    setPlaylistContext([
+      {
+        url: `https://www.youtube.com/watch?v=${videoId}`,
+        name: title,
+        id: 0,
+      },
+    ]);
 
-  return;
-}
+    setPlayerState((prev) => ({
+      ...prev,
+      metadataIndex: 0,
+      play: true,
+    }));
+
+    return;
+  }
 
   startPlaylistCollection(
     playlist,
     setPlaylistContext,
-    setPlayerState
+    setPlayerState,
   );
 };
 
 const startPlaylistCollection = (
   playlist,
   setPlaylistContext,
-  setPlayerState
+  setPlayerState,
 ) => {
   const newPlaylist = playlist.map((videoId, index) => ({
     name: "",
@@ -95,7 +97,12 @@ const startPlaylistCollection = (
     id: index,
   }));
 
-  setPlaylistContext((prev) => ({...prev, metadataPlaylist: newPlaylist}))
-  setPlayerState((prev) => ({...prev, metadataIndex: 0, collectingPlaylist: true, play: false,
-  }))
+  setPlaylistContext(newPlaylist);
+
+  setPlayerState((prev) => ({
+    ...prev,
+    metadataIndex: 0,
+    collectingPlaylist: true,
+    play: false,
+  }));
 };
