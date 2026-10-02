@@ -13,7 +13,12 @@ const PlayerStatus = () => {
   }
 
   if (playerState.mode === "test" && playlistContext[playerState.metadataIndex]?.name || playlistContext?.name) {
-    return <h2>{playlistContext[playerState.metadataIndex]?.name || playlistContext?.name}</h2>;
+    return (
+    <>
+    <h2>{playerState.title || ""}</h2>
+    <h3>{playlistContext[playerState.metadataIndex]?.name || playlistContext?.name}</h3>
+    </>
+    );
   }
 
 };

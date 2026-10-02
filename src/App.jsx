@@ -27,6 +27,7 @@ function App() {
     shuffle: false,
     metadataIndex: 0,
     collectingPlaylist: false,
+    title: "",
   });
 
   //   const [playlistState, setPlaylistState] = useState({
