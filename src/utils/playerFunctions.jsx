@@ -9,8 +9,6 @@ export const handleLoadedMetadata = (
 
   const title = api?.videoTitle || "";
 
-  console.log(api.playerInfo);
-
   if (playerState.collectingPlaylist) {
     setPlaylistContext((prev) =>
       prev.map((item, index) =>

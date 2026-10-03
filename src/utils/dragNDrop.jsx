@@ -49,6 +49,8 @@ export function onDrop(
     e.dataTransfer.getData("text/plain"),
   );
 
+console.log(data);
+
   const {song, sourcePlaylistId} = data;
   
 

@@ -107,7 +107,7 @@ export const createPlayerButtons = ({
   {
     element: "input",
     id: "progress",
-    disabled: playlistContext[playerState.metadataIndex]?.url || playlistContext?.url ? true : false,
+    disabled: playlistContext[playerState.metadataIndex]?.url || playlistContext?.url ? false : true,
     text: durationProgress(playerState.progress, playerState.duration),
     rangeValue: playerState.progress,
     min: 0,

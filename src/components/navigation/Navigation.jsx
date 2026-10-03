@@ -11,15 +11,13 @@ const Navigation = () => {
     const { setPlayerState } = useContext(PlayerContext);
     const { setPlaylistContext } = useContext(PlaylistContext);
   function navigateFunction(e) {
-     setPlayerState((prev) => ({
-      ...prev,
-      mode: "",
-    }));
-    setPlaylistContext([])
+    //  setPlayerState((prev) => ({
+    //   ...prev,
+    //   mode: "",
+    // }));
+    // setPlaylistContext([])
     navigate(`/${e.target.value}`);
   }
-
-
 
   return (
     <>

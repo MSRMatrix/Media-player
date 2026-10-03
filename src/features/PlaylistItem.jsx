@@ -7,12 +7,12 @@ const PlaylistItem = ({ song, index }) => {
   const { playlistContext, setPlaylistContext } = useContext(PlaylistContext);
     const { playerState, setPlayerState } = useContext(PlayerContext);
   const playlistIcon = [
-    {
-      name: "faHandPointer",
-      onClick: () => {
-        console.log("klick");
-      },
-    },
+    // {
+    //   name: "faHandPointer",
+    //   onClick: () => {
+    //     console.log("klick");
+    //   },
+    // },
     {
       name: "faTrashCan",
       onClick: () => {
