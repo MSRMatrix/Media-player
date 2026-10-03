@@ -5,13 +5,15 @@ import { PlaylistContext } from "./context/PlaylistContext";
 import Home from "./pages/Home";
 import Lists from "./pages/Lists";
 import List from "./pages/List";
-import ImportExport from "./pages/ImportExport";
 import Tutorial from "./pages/Tutorial";
 import Youtube from "./pages/Youtube";
 import NotFound from "./pages/NotFound";
 import { LocaleStorageContext } from "./context/LocaleStorageContext";
 import MediaInput from "./pages/MediaInput";
 import { PlayerContext } from "./context/PlayerContext";
+import Settings from "./pages/Settings";
+import ImportExport from "./pages/settings/ImportExport";
+import Device from "./pages/settings/Device";
 
 function App() {
   const [playlistContext, setPlaylistContext] = useState([]);
@@ -29,11 +31,6 @@ function App() {
     collectingPlaylist: false,
     title: "",
   });
-
-  //   const [playlistState, setPlaylistState] = useState({
-  //   playlist: [],
-  //   metadataPlaylist: [],
-  // });
 
   const [localeStorageContext, setLocaleStorageContext] = useState(() => {
     const savedPlaylist = localStorage.getItem("playlist");
@@ -77,9 +74,20 @@ function App() {
           element: <List />,
         },
         {
-          path: "import-export",
-          element: <ImportExport />,
+          path: "settings",
+          element: <Settings />,
+          children: [
+            {
+              path: "import-export",
+              element: <ImportExport />,
+            },
+            {
+              path: "device",
+              element: <Device />,
+            },
+          ],
         },
+
         {
           path: "tutorial",
           element: <Tutorial />,

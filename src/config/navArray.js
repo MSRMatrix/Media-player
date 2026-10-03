@@ -7,14 +7,10 @@
       path: "lists",
       name: "Lists",
     },
-    // {
-    //   path: "lists/:id",
-    //   name: "List",
-    // },
-    {
-      path: "import-export",
-      name: "ImportExport",
-    },
+     {
+       path: "settings",
+       name: "Settings",
+     },
     {
       path: "tutorial",
       name: "Tutorial",
