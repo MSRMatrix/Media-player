@@ -30,6 +30,7 @@ function App() {
     metadataIndex: 0,
     collectingPlaylist: false,
     title: "",
+    songs: [],
   });
 
   const [localeStorageContext, setLocaleStorageContext] = useState(() => {

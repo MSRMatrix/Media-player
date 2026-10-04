@@ -5,7 +5,7 @@ import { PlayerContext } from "../context/PlayerContext";
 
 const PlaylistItem = ({ song, index }) => {
   const { playlistContext, setPlaylistContext } = useContext(PlaylistContext);
-    const { playerState, setPlayerState } = useContext(PlayerContext);
+  const { playerState, setPlayerState } = useContext(PlayerContext);
   const playlistIcon = [
     // {
     //   name: "faHandPointer",
@@ -16,55 +16,61 @@ const PlaylistItem = ({ song, index }) => {
     {
       name: "faTrashCan",
       onClick: () => {
-  const removedSong = playlistContext.find(
-    (item) => item.id === song.id
-  );
+        const removedSong = playlistContext.find((item) => item.id === song.id);
 
-  console.log("Entfernt:", removedSong);
+        console.log("Entfernt:", removedSong);
 
-  const updatedPlaylist = playlistContext.filter(
-    (item) => item.id !== song.id
-  );
+        const updatedPlaylist = playlistContext.filter(
+          (item) => item.id !== song.id,
+        );
 
-  setPlaylistContext(updatedPlaylist)
+        setPlaylistContext(updatedPlaylist);
 
-  setPlayerState((prev) => ({
-  ...prev,             
-  metadataIndex: 0      
-}));
+        setPlayerState((prev) => ({
+          ...prev,
+          metadataIndex: 0,
+        }));
 
-  if(updatedPlaylist.length < 1){
-    setPlaylistContext([])
-    setPlayerState({
-    mode: "",
-    play: false,
-  })
-  }
-}
+        if (updatedPlaylist.length < 1) {
+          setPlaylistContext([]);
+          setPlayerState({
+            mode: "",
+            play: false,
+          });
+        }
+      },
     },
   ];
-  
+
   return (
     <>
       <li
         draggable
         data-index={index}
         onDragStart={(e) => {
-  e.dataTransfer.setData(
-    "text/plain",
-    JSON.stringify({
-      song,
-      sourcePlaylistId: null,
-    }),
-  );
-}}
-        onClick={() => setPlayerState((prev) => ({
-  ...prev,             
-  metadataIndex: song.id   
-}))}
+          e.dataTransfer.setData(
+            "text/plain",
+            JSON.stringify({
+              song,
+              sourcePlaylistId: null,
+            }),
+          );
+        }}
+        onClick={() =>
+          setPlayerState((prev) => ({
+            ...prev,
+            metadataIndex: song.id,
+          }))
+        }
         data-url={song.url}
         value={song.url}
-        style={{ background: playlistContext[playerState.metadataIndex].url === song.url || playlistContext.url === song.url ? "red" : "" }}
+        style={{
+          background:
+            playlistContext[playerState.metadataIndex].url === song.url ||
+            playlistContext.url === song.url
+              ? "red"
+              : "",
+        }}
       >
         {song.name}
       </li>
@@ -74,6 +80,23 @@ const PlaylistItem = ({ song, index }) => {
           <Icon iconName={item.name} />
         </button>
       ))}
+     {playlistContext.length > 1 ?( <input
+        type="checkbox"
+        checked={playerState.songs.includes(song.id)}
+        onChange={(e) => {
+          if (e.target.checked) {
+            setPlayerState((prev) => ({
+              ...prev,
+              songs: [...prev.songs, song.id],
+            }));
+          } else {
+            setPlayerState((prev) => ({
+              ...prev,
+              songs: prev.songs.filter((id) => id !== song.id),
+            }));
+          }
+        }}
+      />) : <></>}
     </>
   );
 };

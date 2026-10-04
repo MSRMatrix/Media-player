@@ -5,29 +5,32 @@ import { PlayerContext } from "../context/PlayerContext";
 import Icon from "../components/Icon";
 
 const PlaylistView = () => {
-
-    const { playerState } = useContext(PlayerContext);
+  const { playerState, setPlayerState } = useContext(PlayerContext);
   const { playlistContext } = useContext(PlaylistContext);
 
-   const playlistIcon = [
-  {
-    name: "faHandPointer",
-    onDragStart: (e) => {
-      e.dataTransfer.setData(
-        "text/plain",
-        JSON.stringify({
-          playlist: playlistContext,
-        })
-      );
-    },
-  },
-];
+  const playlistIcon = [
+    {
+      name: "faHandPointer",
+      onDragStart: (e) => {
+        const selectedSongs = playlistContext.filter((song) =>
+          playerState.songs.includes(song.id),
+        );
 
-  const playlist =
-  playlistContext.length > 0
-      ? playlistContext
-      : [];
-      
+        e.dataTransfer.setData(
+          "text/plain",
+          JSON.stringify({
+            playlist: selectedSongs,
+          }),
+        );
+      },
+    },
+  ];
+
+  const playlist = playlistContext.length > 0 ? playlistContext : [];
+
+  console.log(playerState.songs.length);
+  console.log(playlistContext.length);
+
   if (playlist.length === 0) {
     return null;
   }
@@ -40,23 +43,47 @@ const PlaylistView = () => {
         </div>
       )}
 
-     {playlistIcon.map((item) => (
-  <button
-    key={item.name}
-    draggable
-    onDragStart={(e) => item.onDragStart(e)}
-  >
-    <Icon iconName={item.name} />
-  </button>
-))}
+      {playlistIcon.map((item) => (
+        <button
+          key={item.name}
+          draggable
+          onDragStart={(e) => item.onDragStart(e)}
+        >
+          <Icon iconName={item.name} />
+        </button>
+      ))}
+
+     {playlistContext.length > 1 ?( <button
+        onClick={() => {
+          if (playerState.songs.length !== playlistContext.length) {
+            const allSongIds = playlistContext
+              .map((song) => song.id)
+              .sort(
+                (a, b) =>
+                  playlistContext.findIndex((song) => song.id === a) -
+                  playlistContext.findIndex((song) => song.id === b),
+              );
+
+            setPlayerState((prev) => ({
+              ...prev,
+              songs: allSongIds,
+            }));
+          } else {
+            setPlayerState((prev) => ({
+              ...prev,
+              songs: [],
+            }));
+          }
+        }}
+      >
+        {playerState.songs.length === playlistContext.length
+          ? "Uncheck all"
+          : "Check all"}
+      </button>) : <></>}
 
       {!playerState.collectingPlaylist ? (
         playlist.map((song, index) => (
-          <PlaylistItem
-            key={song.id}
-            song={song}
-            index={index}
-          />
+          <PlaylistItem key={song.id} song={song} index={index} />
         ))
       ) : (
         <></>

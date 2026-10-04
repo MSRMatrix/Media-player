@@ -10,7 +10,7 @@ import CreatePlaylist from "../features/CreatePlaylist";
 
 const MediaInput = () => {
   const { setPlaylistContext } = useContext(PlaylistContext);
-  const { playerState } = useContext(PlayerContext);
+  const { playerState, setPlayerState } = useContext(PlayerContext);
 
   const location = useLocation();
 
@@ -23,6 +23,7 @@ const MediaInput = () => {
           url: url,
           id: 0,
       }));
+      setPlayerState((prev) => ({...prev, songs: []}))
     } catch (error) {
       console.log("Ungültige URL:", error);
     } finally {

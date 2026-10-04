@@ -16,7 +16,6 @@ const { playerState, setPlayerState } = useContext(PlayerContext);
     const value = Number(e.target.value);
 
     setPlayerState((prev) => ({...prev, progress: value}))
-
     playerRef.current?.api?.seekTo(value, "seconds");
   };
 

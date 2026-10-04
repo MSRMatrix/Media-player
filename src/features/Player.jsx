@@ -79,7 +79,7 @@ const Player = () => {
         }}
       />
 
-      <PlaylistControls />
+      <PlaylistControls playerRef={playerRef}/>
 
       <PlayerStatus />
     </div>

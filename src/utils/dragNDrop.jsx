@@ -1,30 +1,3 @@
-// export function onDrop(e, setLocaleStorageContext, playlist, dropPosition) {
-//   e.preventDefault();
-
-//   const song = JSON.parse(e.dataTransfer.getData("text/plain"));
-
-//   const newSong = {
-//     ...song,
-//     id: crypto.randomUUID(),
-//   };
-
-//   const songs = [...playlist.songs];
-
-//   songs.splice(dropPosition, 0, newSong);
-
-//   setLocaleStorageContext((prev) => ({
-//     ...prev,
-//     playlist: prev.playlist.map((item) =>
-//       item.id === playlist.id
-//         ? {
-//             ...item,
-//             songs,
-//           }
-//         : item,
-//     ),
-//   }));
-// }
-
 export function onDragOver(e, index, setDropPosition) {
   e.preventDefault();
 
@@ -36,23 +9,60 @@ export function onDragOver(e, index, setDropPosition) {
   setDropPosition(insertIndex);
 }
 
-
-export function onDrop(
-  e,
-  setLocaleStorageContext,
-  playlist,
-  dropPosition,
-) {
+export function onDrop(e, setLocaleStorageContext, playlist, dropPosition) {
   e.preventDefault();
 
-  const data = JSON.parse(
-    e.dataTransfer.getData("text/plain"),
-  );
-
-console.log(data);
-
-  const {song, sourcePlaylistId} = data;
+  const data = JSON.parse(e.dataTransfer.getData("text/plain"));
   
+  const { song, sourcePlaylistId, playlist: sourcePlaylist } = data;
+
+  if (sourcePlaylist) {
+
+    const droppedSongs = sourcePlaylist;
+
+    setLocaleStorageContext((prev) => ({
+      ...prev,
+
+      playlist: prev.playlist.map((item) => {
+        if (item.id !== playlist.id) {
+          return item;
+        }
+
+        const songs = [...item.songs];
+
+        // Playlist wird in sich selbst verschoben
+        if (sourcePlaylistId === playlist.id) {
+          const movingSongs = [...droppedSongs];
+
+          const remainingSongs = songs.filter(
+            (song) =>
+              !movingSongs.some((movingSong) => movingSong.id === song.id),
+          );
+
+          remainingSongs.splice(dropPosition, 0, ...movingSongs);
+
+          return {
+            ...item,
+            songs: remainingSongs,
+          };
+        }
+
+        // Andere Playlist → Songs kopieren
+        const copiedSongs = droppedSongs.map((song) => ({
+          ...song,
+          id: crypto.randomUUID(),
+        }));
+
+        songs.splice(dropPosition, 0, ...copiedSongs);
+
+        return {
+          ...item,
+          songs,
+        };
+      }),
+    }));
+    return;
+  }
 
   setLocaleStorageContext((prev) => ({
     ...prev,
@@ -64,16 +74,12 @@ console.log(data);
       const songs = [...item.songs];
 
       if (sourcePlaylistId === playlist.id) {
-        const oldIndex = songs.findIndex(
-          (item) => item.id === song.id,
-        );
+        const oldIndex = songs.findIndex((item) => item.id === song.id);
 
         songs.splice(oldIndex, 1);
 
         const newIndex =
-          oldIndex < dropPosition
-            ? dropPosition - 1
-            : dropPosition;
+          oldIndex < dropPosition ? dropPosition - 1 : dropPosition;
 
         songs.splice(newIndex, 0, song);
 
@@ -95,4 +101,5 @@ console.log(data);
       };
     }),
   }));
+  return;
 }

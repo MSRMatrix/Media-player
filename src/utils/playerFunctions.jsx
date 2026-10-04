@@ -50,8 +50,9 @@ export const handleLoadedMetadata = (
     setPlayerState((prev) => ({
       ...prev,
       play: true,
+      title: title
     }));
-
+    // setPlaylistContext((prev) => ({...prev, name: title}))
     return;
   }
 
