@@ -39,18 +39,12 @@ export const handleLoadedMetadata = (
     return;
   }
 
-  setPlayerState((prev) => ({
-    ...prev,
-    mode: "test",
-  }));
-
   const playlist = api.playerInfo?.playlist;
 
   if (!playlist) {
     setPlayerState((prev) => ({
       ...prev,
       play: true,
-      title: title
     }));
     // setPlaylistContext((prev) => ({...prev, name: title}))
     return;

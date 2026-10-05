@@ -8,14 +8,16 @@ const Navigation = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-    const { setPlayerState } = useContext(PlayerContext);
-    const { setPlaylistContext } = useContext(PlaylistContext);
+  const { playerState, setPlayerState } = useContext(PlayerContext);
+  const { setPlaylistContext } = useContext(PlaylistContext);
   function navigateFunction(e) {
-    //  setPlayerState((prev) => ({
-    //   ...prev,
-    //   mode: "",
-    // }));
-    // setPlaylistContext([])
+    if (location.pathname !== "media-input" && playerState.mode === "test") {
+      setPlayerState((prev) => ({
+        ...prev,
+        mode: "",
+      }));
+      setPlaylistContext([]);
+    }
     navigate(`/${e.target.value}`);
   }
 

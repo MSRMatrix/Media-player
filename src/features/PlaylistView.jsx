@@ -28,9 +28,6 @@ const PlaylistView = () => {
 
   const playlist = playlistContext.length > 0 ? playlistContext : [];
 
-  console.log(playerState.songs.length);
-  console.log(playlistContext.length);
-
   if (playlist.length === 0) {
     return null;
   }

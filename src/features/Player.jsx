@@ -8,6 +8,8 @@ import { handleLoadedMetadata } from "../utils/playerFunctions";
 import { onEnded } from "../utils/onEnded";
 import { onError } from "../utils/onError";
 import { PlayerContext } from "../context/PlayerContext";
+import Lists from "../pages/Lists";
+import CreatePlaylist from "./CreatePlaylist";
 
 const Player = () => {
   const { playlistContext, setPlaylistContext } = useContext(PlaylistContext);
@@ -38,14 +40,16 @@ const Player = () => {
       JSON.stringify(localeStorageContext.playlist),
     );
   }, [localeStorageContext.playlist]);
-  
 
   return (
     <div>
       <ReactPlayer
         style={{ display: !playerState.collectingPlaylist ? "" : "none" }}
         ref={playerRef}
-        src={playlistContext[playerState.metadataIndex]?.url || playlistContext?.url}
+        src={
+          playlistContext[playerState.metadataIndex]?.url ||
+          playlistContext?.url
+        }
         volume={playerState.volume}
         playbackRate={playerState.playbackRate}
         onWaiting={() => console.log("test")}
@@ -79,9 +83,16 @@ const Player = () => {
         }}
       />
 
-      <PlaylistControls playerRef={playerRef}/>
+      <PlaylistControls
+        playerRef={playerRef}
+        setPlaylistContext={setPlaylistContext}
+      />
 
       <PlayerStatus />
+
+      <Lists />
+
+      <CreatePlaylist />
     </div>
   );
 };

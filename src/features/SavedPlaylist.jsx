@@ -23,7 +23,7 @@ const SavedPlaylist = () => {
         >
           <h2>{playlist.title}</h2>
 
-          <ul>iiii
+          <ul>
             {playlist.songs.map((song, index) => (
               <li   draggable
                   onDragStart={(e) => {

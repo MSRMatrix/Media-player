@@ -5,7 +5,6 @@ import { mediaInputArray } from "../config/mediaInputArray";
 import { useLocation } from "react-router-dom";
 import PlaylistView from "../features/PlaylistView";
 import { PlayerContext } from "../context/PlayerContext";
-import SavedPlaylist from "../features/SavedPlaylist";
 import CreatePlaylist from "../features/CreatePlaylist";
 
 const MediaInput = () => {
@@ -23,7 +22,7 @@ const MediaInput = () => {
           url: url,
           id: 0,
       }));
-      setPlayerState((prev) => ({...prev, songs: []}))
+      setPlayerState((prev) => ({...prev, songs: [], mode: "test", title: ""}))
     } catch (error) {
       console.log("Ungültige URL:", error);
     } finally {
@@ -42,11 +41,11 @@ const MediaInput = () => {
         
        
       /> 
-      {playerState.mode === "test" ? (
+      {playerState.mode === "test"  ? (
         <>
           <PlaylistView />
-          Listen
-          <SavedPlaylist />
+          {/* Listen
+          <SavedPlaylist /> */}
         </>
       ) : (
         <></>

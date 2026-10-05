@@ -16,6 +16,7 @@ import {
   faPause,
   faBan,
   faLinkSlash,
+  faStop,
 
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -38,6 +39,7 @@ const iconMap = {
   faPause: faPause,
   faBan: faBan,
   faLinkSlash: faLinkSlash,
+  faStop: faStop,
   
 };
 

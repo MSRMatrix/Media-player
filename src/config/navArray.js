@@ -3,10 +3,6 @@
       path: "/",
       name: "Home",
     },
-    {
-      path: "lists",
-      name: "Lists",
-    },
      {
        path: "settings",
        name: "Settings",

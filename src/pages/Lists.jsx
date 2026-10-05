@@ -34,6 +34,7 @@ const Lists = () => {
                   ...prev,
                   title: playlist.title,
                   metadataIndex: 0,
+                  mode: ""
                 })));
             }}
           >
@@ -49,6 +50,7 @@ const Lists = () => {
                       ...prev,
                       title: playlist.title,
                       metadataIndex: index,
+                      mode: ""
                     })));
                 }}
                 onDragStart={(e) => {

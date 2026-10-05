@@ -3,8 +3,6 @@ import AppShell from "./layout/AppShell";
 import { useState } from "react";
 import { PlaylistContext } from "./context/PlaylistContext";
 import Home from "./pages/Home";
-import Lists from "./pages/Lists";
-import List from "./pages/List";
 import Tutorial from "./pages/Tutorial";
 import Youtube from "./pages/Youtube";
 import NotFound from "./pages/NotFound";
@@ -65,14 +63,6 @@ function App() {
         {
           index: true,
           element: <Home />,
-        },
-        {
-          path: "lists",
-          element: <Lists />,
-        },
-        {
-          path: "lists/:id",
-          element: <List />,
         },
         {
           path: "settings",
