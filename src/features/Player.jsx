@@ -96,5 +96,5 @@ const Player = () => {
     </div>
   );
 };
-// Drag and Drop
+
 export default Player;
