@@ -1,1 +1,27 @@
-/* Color */
+[data-theme="dark"] {
+  --background: #080D16;
+  --surface: #101827;
+  --surface-elevated: #162235;
+
+  --primary: #3B82F6;
+  --primary-light: #60A5FA;
+
+  --text: #F1F5F9;
+  --text-secondary: #94A3B8;
+
+  --border: #263449;
+}
+
+[data-theme="light"] {
+  --background: #EEF5FF;
+  --surface: #FFFFFF;
+  --surface-elevated: #F5F9FF;
+
+  --primary: #2563EB;
+  --primary-light: #3B82F6;
+
+  --text: #172033;
+  --text-secondary: #64748B;
+
+  --border: #D7E3F4;
+}

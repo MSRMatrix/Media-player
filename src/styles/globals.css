@@ -1,4 +1,7 @@
 @import "./App.css";
 @import "./index.css";
 
-@import "./features/videoplayer.css"
+@import "./features/videoplayer.css";
+
+@import "./elements/button.css";
+@import "./elements/input.css";

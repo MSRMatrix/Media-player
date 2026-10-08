@@ -12,9 +12,12 @@ import { PlayerContext } from "./context/PlayerContext";
 import Settings from "./pages/Settings";
 import ImportExport from "./pages/settings/ImportExport";
 import Device from "./pages/settings/Device";
+import { ThemeContext } from "./context/ThemeCondext";
 
 function App() {
   const [playlistContext, setPlaylistContext] = useState([]);
+
+  const [theme, setTheme] = useState("dark")
 
   const [playerState, setPlayerState] = useState({
     mode: "",
@@ -98,8 +101,11 @@ function App() {
       element: <NotFound />,
     },
   ]);
+
+  
   return (
     <>
+    <ThemeContext.Provider value={{theme, setTheme}}>
       <PlayerContext.Provider value={{ playerState, setPlayerState }}>
         <LocaleStorageContext.Provider
           value={{ localeStorageContext, setLocaleStorageContext }}
@@ -111,6 +117,7 @@ function App() {
           </PlaylistContext.Provider>
         </LocaleStorageContext.Provider>
       </PlayerContext.Provider>
+      </ThemeContext.Provider>
     </>
   );
 }

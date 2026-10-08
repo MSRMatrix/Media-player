@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import Icon from "../components/Icon";
 import { PlaylistContext } from "../context/PlaylistContext";
 import { PlayerContext } from "../context/PlayerContext";
+import Button from "../elements/Button";
 
 const PlaylistItem = ({ song, index }) => {
   const { playlistContext, setPlaylistContext } = useContext(PlaylistContext);
@@ -76,27 +76,35 @@ const PlaylistItem = ({ song, index }) => {
       </li>
 
       {playlistIcon.map((item) => (
-        <button onClick={() => item.onClick()}>
-          <Icon iconName={item.name} />
-        </button>
+        <Button
+          classname={""}
+          onClick={item.onClick}
+          disabled={false}
+          iconName={item.name}
+        />
       ))}
-     {playlistContext.length > 1 ?( <input
-        type="checkbox"
-        checked={playerState.songs.includes(song.id)}
-        onChange={(e) => {
-          if (e.target.checked) {
-            setPlayerState((prev) => ({
-              ...prev,
-              songs: [...prev.songs, song.id],
-            }));
-          } else {
-            setPlayerState((prev) => ({
-              ...prev,
-              songs: prev.songs.filter((id) => id !== song.id),
-            }));
-          }
-        }}
-      />) : <></>}
+
+      {playlistContext.length > 1 ? (
+        <input
+          type="checkbox"
+          checked={playerState.songs.includes(song.id)}
+          onChange={(e) => {
+            if (e.target.checked) {
+              setPlayerState((prev) => ({
+                ...prev,
+                songs: [...prev.songs, song.id],
+              }));
+            } else {
+              setPlayerState((prev) => ({
+                ...prev,
+                songs: prev.songs.filter((id) => id !== song.id),
+              }));
+            }
+          }}
+        />
+      ) : (
+        <></>
+      )}
     </>
   );
 };

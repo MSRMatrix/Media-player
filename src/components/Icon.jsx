@@ -17,7 +17,7 @@ import {
   faBan,
   faLinkSlash,
   faStop,
-faGripLines,
+  faGripLines,
 } from "@fortawesome/free-solid-svg-icons";
 
 import {} from "@fortawesome/free-brands-svg-icons";
@@ -40,7 +40,7 @@ const iconMap = {
   faBan: faBan,
   faLinkSlash: faLinkSlash,
   faStop: faStop,
-  faGripLines:faGripLines,
+  faGripLines: faGripLines,
 };
 
 const Icon = ({ iconName }) => {

@@ -8,7 +8,6 @@ import { handleLoadedMetadata } from "../utils/playerFunctions";
 import { onEnded } from "../utils/onEnded";
 import { onError } from "../utils/onError";
 import { PlayerContext } from "../context/PlayerContext";
-import Lists from "../pages/Lists";
 import CreatePlaylist from "./CreatePlaylist";
 
 const Player = () => {
@@ -43,55 +42,54 @@ const Player = () => {
 
   return (
     <div>
-      <ReactPlayer
-        style={{ display: !playerState.collectingPlaylist ? "" : "none" }}
-        ref={playerRef}
-        src={
-          playlistContext[playerState.metadataIndex]?.url ||
-          playlistContext?.url
-        }
-        volume={playerState.volume}
-        playbackRate={playerState.playbackRate}
-        onWaiting={() => console.log("test")}
-        onLoadedMetadata={(e) =>
-          handleLoadedMetadata(
-            e,
-            setPlaylistContext,
-            playerState,
-            setPlayerState,
-            playlistContext,
-          )
-        }
-        onDurationChange={(e) => {
-          const duration = e.currentTarget.duration;
-          setPlayerState((prev) => ({
-            ...prev,
-            duration,
-          }));
-        }}
-        onTimeUpdate={(e) => {
-          const progress = e.currentTarget.currentTime;
-          setPlayerState((prev) => ({ ...prev, progress: progress }));
-        }}
-        onEnded={() => {
-          onEnded(playerRef, playerState, setPlayerState, playlistContext);
-        }}
-        playing={playerState.play && !playerState.collectingPlaylist}
-        loop={false}
-        onError={(error) => {
-          onError(error);
-        }}
-      />
+      <div>
+        <ReactPlayer
+          style={{ display: !playerState.collectingPlaylist ? "" : "none" }}
+          ref={playerRef}
+          src={
+            playlistContext[playerState.metadataIndex]?.url ||
+            playlistContext?.url
+          }
+          volume={playerState.volume}
+          playbackRate={playerState.playbackRate}
+          onWaiting={() => console.log("test")}
+          onLoadedMetadata={(e) =>
+            handleLoadedMetadata(
+              e,
+              setPlaylistContext,
+              playerState,
+              setPlayerState,
+              playlistContext,
+            )
+          }
+          onDurationChange={(e) => {
+            const duration = e.currentTarget.duration;
+            setPlayerState((prev) => ({
+              ...prev,
+              duration,
+            }));
+          }}
+          onTimeUpdate={(e) => {
+            const progress = e.currentTarget.currentTime;
+            setPlayerState((prev) => ({ ...prev, progress: progress }));
+          }}
+          onEnded={() => {
+            onEnded(playerRef, playerState, setPlayerState, playlistContext);
+          }}
+          playing={playerState.play && !playerState.collectingPlaylist}
+          loop={false}
+          onError={(error) => {
+            onError(error);
+          }}
+        />
 
-      <PlaylistControls
-        playerRef={playerRef}
-        setPlaylistContext={setPlaylistContext}
-      />
+        <PlaylistControls
+          playerRef={playerRef}
+          setPlaylistContext={setPlaylistContext}
+        />
 
-      <PlayerStatus />
-
-      <Lists />
-
+        <PlayerStatus />
+      </div>
       <CreatePlaylist />
     </div>
   );

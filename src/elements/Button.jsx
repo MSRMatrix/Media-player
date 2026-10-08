@@ -1,5 +1,7 @@
-const Button = ({text, classname, onClick, disabled, children}) => {
-    return <button className={classname} disabled={disabled} onClick={onClick}>{children || text || "N/A"}</button>
+import Icon from "../components/Icon";
+
+const Button = ({classname, onClick, disabled, iconName}) => {
+    return <button className={classname} disabled={disabled} onClick={onClick}><Icon iconName={iconName} /></button>
 };
 
 export default Button;

@@ -2,7 +2,6 @@ import { useContext } from "react";
 import Button from "../elements/Button";
 import Input from "../elements/Input";
 import { createPlayerButtons } from "../utils/playerButtons";
-import Icon from "../components/Icon";
 import { PlayerContext } from "../context/PlayerContext";
 import { PlaylistContext } from "../context/PlaylistContext";
 
@@ -37,8 +36,8 @@ const { playerState, setPlayerState } = useContext(PlayerContext);
             classname="button"
             onClick={item.onClick}
             disabled={item.disabled}
+            iconName={item.iconName}
           >
-            <Icon iconName={item.iconName} />
           </Button>
         ) : (
           <Input

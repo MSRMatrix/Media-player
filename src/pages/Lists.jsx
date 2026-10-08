@@ -4,27 +4,21 @@ import { onDragOver, onDrop } from "../utils/dragNDrop";
 import Icon from "../components/Icon";
 import { PlaylistContext } from "../context/PlaylistContext";
 import { PlayerContext } from "../context/PlayerContext";
+import { listArray } from "../config/listArray";
 
 const Lists = () => {
   const [dropPosition, setDropPosition] = useState(null);
 
-  const {
-    localeStorageContext,
-    setLocaleStorageContext,
-  } = useContext(LocaleStorageContext);
+  const { localeStorageContext, setLocaleStorageContext } =
+    useContext(LocaleStorageContext);
 
-  const {
-    playlistContext,
-    setPlaylistContext,
-  } = useContext(PlaylistContext);
+  const { playlistContext, setPlaylistContext } = useContext(PlaylistContext);
 
-  const {
-    playerState,
-    setPlayerState,
-  } = useContext(PlayerContext);
+  const { playerState, setPlayerState } = useContext(PlayerContext);
 
   return (
-    <>
+    <div>
+    <h2>listen</h2>
       {localeStorageContext.playlist.map((playlist) => (
         <div
           key={playlist.id}
@@ -33,12 +27,7 @@ const Lists = () => {
             e.preventDefault();
           }}
           onDrop={(e) => {
-            onDrop(
-              e,
-              setLocaleStorageContext,
-              playlist,
-              dropPosition,
-            );
+            onDrop(e, setLocaleStorageContext, playlist, dropPosition);
           }}
         >
           <h2>{playlist.title}</h2>
@@ -63,18 +52,10 @@ const Lists = () => {
             {playlist.songs.map((song, index) => (
               <li
                 key={song.id}
-                onDragOver={(e) =>
-                  onDragOver(
-                    e,
-                    index,
-                    setDropPosition,
-                  )
-                }
+                onDragOver={(e) => onDragOver(e, index, setDropPosition)}
                 style={{
                   backgroundColor:
-                    playlistContext[
-                      playerState.metadataIndex
-                    ]?.id === song.id
+                    playlistContext[playerState.metadataIndex]?.id === song.id
                       ? "red"
                       : "",
                 }}
@@ -95,49 +76,22 @@ const Lists = () => {
                   {song.name}
                 </span>
 
-                {/* Song löschen */}
-                <button
-                  onClick={() => {
-                    setLocaleStorageContext((prev) => ({
-                      ...prev,
-                      playlist: prev.playlist.map((item) =>
-                        item.id === playlist.id
-                          ? {
-                              ...item,
-                              songs: item.songs.filter(
-                                (item) =>
-                                  item.id !== song.id,
-                              ),
-                            }
-                          : item,
-                      ),
-                    }));
-                  }}
-                >
-                  <Icon iconName="faTrashCan" />
-                </button>
-
-                {/* Nur dieses Icon ist draggable */}
-                <button
-                  draggable
-                  onDragStart={(e) => {
-                    e.dataTransfer.setData(
-                      "text/plain",
-                      JSON.stringify({
-                        song,
-                        sourcePlaylistId: playlist.id,
-                      }),
-                    );
-                  }}
-                >
-                  <Icon iconName="faGripLines" />
-                </button>
+                {listArray({ setLocaleStorageContext }).map((action) => (
+                  <button
+                    key={action.iconName}
+                    draggable={action.draggable}
+                    onClick={() => action.onClick(playlist, song)}
+                    onDragStart={(e) => action.onDragStart(e, song, playlist)}
+                  >
+                    <Icon iconName={action.iconName} />
+                  </button>
+                ))}
               </li>
             ))}
           </ul>
         </div>
       ))}
-    </>
+    </div>
   );
 };
 
