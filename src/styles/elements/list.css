@@ -1,0 +1,38 @@
+
+li {
+  padding: 10px 12px;
+  border-radius: 10px;
+
+  background: var(--surface);
+  color: var(--text);
+
+  border: 1px solid var(--border);
+
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  border: 1px solid var(--border);
+}
+
+li:hover {
+  background: var(--surface-elevated);
+  border-color: var(--border);
+}
+
+li[data-selected="true"] {
+  background: color-mix(
+    in srgb,
+    var(--primary) 14%,
+    var(--surface)
+  );
+
+  border-color: var(--primary);
+}
+
+li::marker {
+  content: "";
+}

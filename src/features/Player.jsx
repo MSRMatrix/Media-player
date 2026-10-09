@@ -8,7 +8,6 @@ import { handleLoadedMetadata } from "../utils/playerFunctions";
 import { onEnded } from "../utils/onEnded";
 import { onError } from "../utils/onError";
 import { PlayerContext } from "../context/PlayerContext";
-import CreatePlaylist from "./CreatePlaylist";
 
 const Player = () => {
   const { playlistContext, setPlaylistContext } = useContext(PlaylistContext);
@@ -90,7 +89,6 @@ const Player = () => {
 
         <PlayerStatus />
       </div>
-      <CreatePlaylist />
     </div>
   );
 };

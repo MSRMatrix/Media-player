@@ -5,3 +5,6 @@
 
 @import "./elements/button.css";
 @import "./elements/input.css";
+@import "./elements/form.css";
+@import "./elements/list.css";
+@import "./elements/heading.css";

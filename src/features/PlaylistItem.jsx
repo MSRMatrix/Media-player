@@ -7,12 +7,6 @@ const PlaylistItem = ({ song, index }) => {
   const { playlistContext, setPlaylistContext } = useContext(PlaylistContext);
   const { playerState, setPlayerState } = useContext(PlayerContext);
   const playlistIcon = [
-    // {
-    //   name: "faHandPointer",
-    //   onClick: () => {
-    //     console.log("klick");
-    //   },
-    // },
     {
       name: "faTrashCan",
       onClick: () => {
@@ -65,11 +59,14 @@ const PlaylistItem = ({ song, index }) => {
         data-url={song.url}
         value={song.url}
         style={{
-          background:
-            playlistContext[playerState.metadataIndex].url === song.url ||
-            playlistContext.url === song.url
-              ? "red"
+          backgroundColor:
+            playlistContext[playerState.metadataIndex]?.id === song.id
+              ? "color-mix(in srgb, var(--primary) 18%, var(--surface))"
               : "",
+          borderColor:
+            playlistContext[playerState.metadataIndex]?.id === song.id
+              ? "var(--primary)"
+              : "transparent",
         }}
       >
         {song.name}

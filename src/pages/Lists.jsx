@@ -5,6 +5,7 @@ import Icon from "../components/Icon";
 import { PlaylistContext } from "../context/PlaylistContext";
 import { PlayerContext } from "../context/PlayerContext";
 import { listArray } from "../config/listArray";
+import CreatePlaylist from "../features/CreatePlaylist";
 
 const Lists = () => {
   const [dropPosition, setDropPosition] = useState(null);
@@ -18,9 +19,10 @@ const Lists = () => {
 
   return (
     <div>
-    <h2>listen</h2>
+      <CreatePlaylist />
       {localeStorageContext.playlist.map((playlist) => (
         <div
+          className="list"
           key={playlist.id}
           data-playlist-id={playlist.id}
           onDragOver={(e) => {
@@ -50,18 +52,8 @@ const Lists = () => {
 
           <ul>
             {playlist.songs.map((song, index) => (
-              <li
-                key={song.id}
-                onDragOver={(e) => onDragOver(e, index, setDropPosition)}
-                style={{
-                  backgroundColor:
-                    playlistContext[playerState.metadataIndex]?.id === song.id
-                      ? "red"
-                      : "",
-                }}
-              >
-                {/* Song auswählen */}
-                <span
+              <div key={song.id}>
+                <li
                   onClick={() => {
                     setPlaylistContext(playlist.songs);
 
@@ -72,9 +64,20 @@ const Lists = () => {
                       mode: "",
                     }));
                   }}
+                  onDragOver={(e) => onDragOver(e, index, setDropPosition)}
+                  style={{
+                    backgroundColor:
+                      playlistContext[playerState.metadataIndex]?.id === song.id
+                        ? "color-mix(in srgb, var(--primary) 18%, var(--surface))"
+                        : "",
+                    borderColor:
+                      playlistContext[playerState.metadataIndex]?.id === song.id
+                        ? "var(--primary)"
+                        : "",
+                  }}
                 >
-                  {song.name}
-                </span>
+                  <span>{song.name}</span>
+                </li>
 
                 {listArray({ setLocaleStorageContext }).map((action) => (
                   <button
@@ -86,7 +89,7 @@ const Lists = () => {
                     <Icon iconName={action.iconName} />
                   </button>
                 ))}
-              </li>
+              </div>
             ))}
           </ul>
         </div>

@@ -1,3 +1,193 @@
-input{
-    
+@import "../colors.css";
+
+input {
+  width: 50%;
+  box-sizing: border-box;
+
+  background: var(--surface);
+  color: var(--text);
+
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  padding: 10px 12px;
+
+  font: inherit;
+
+  outline: none;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.75;
+}
+
+input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+input:disabled {
+  background: var(--surface-elevated);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+input:disabled::placeholder {
+  color: var(--text-secondary);
+}
+
+/* Input Range */
+
+input[type="range"] {
+  width: 100%;
+  height: 6px;
+
+  appearance: none;
+  -webkit-appearance: none;
+
+  background: var(--border);
+  border-radius: 999px;
+
+  cursor: pointer;
+  outline: none;
+}
+
+/* Der Regler selbst */
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+
+  width: 16px;
+  height: 16px;
+
+  background: var(--primary);
+  border: 2px solid var(--surface);
+  border-radius: 50%;
+
+  box-shadow: 0 0 0 1px var(--primary);
+  transition: transform 0.15s ease;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+
+  background: var(--primary);
+  border: 2px solid var(--surface);
+  border-radius: 50%;
+
+  box-shadow: 0 0 0 1px var(--primary);
+  transition: transform 0.15s ease;
+}
+
+/* Hover */
+input[type="range"]:hover::-webkit-slider-thumb {
+  transform: scale(1.2);
+}
+
+input[type="range"]:hover::-moz-range-thumb {
+  transform: scale(1.2);
+}
+
+/* Tastatur-Fokus */
+input[type="range"]:focus-visible {
+  outline: 2px solid var(--primary-light);
+  outline-offset: 5px;
+}
+
+/* Deaktiviert */
+input[type="range"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+/* Checkbox */
+
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+
+  margin: 0;
+
+  display: inline-grid;
+  place-content: center;
+
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+}
+
+/* Aktiviert */
+
+input[type="checkbox"]:checked {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+/* Häkchen */
+
+input[type="checkbox"]::before {
+  content: "";
+
+  width: 5px;
+  height: 9px;
+
+  border: solid var(--surface);
+  border-width: 0 2px 2px 0;
+
+  transform: rotate(45deg) scale(0);
+  transition: transform 0.15s ease;
+}
+
+input[type="checkbox"]:checked::before {
+  transform: rotate(45deg) scale(1);
+}
+
+/* Hover */
+
+input[type="checkbox"]:hover:not(:disabled) {
+  border-color: var(--primary);
+}
+
+/* Tastatur-Fokus */
+
+input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--primary-light);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 15%, transparent);
+}
+
+/* Deaktiviert */
+
+input[type="checkbox"]:disabled {
+  background: var(--surface-elevated);
+  border-color: var(--border);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Klick-Feedback */
+
+input[type="checkbox"]:active:not(:disabled) {
+  transform: scale(0.92);
 }

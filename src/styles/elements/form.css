@@ -1,0 +1,37 @@
+fieldset{
+    border: none;
+}
+
+label {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 500;
+
+  transition: color 0.2s ease;
+}
+
+label {
+  display: inline-block;
+
+  padding: 5px 10px;
+  margin-bottom: 6px;
+
+  background: var(--surface-elevated);
+  color: var(--text-secondary);
+
+  border: 1px solid var(--border);
+  border-radius: 6px;
+
+  font-size: 0.85rem;
+  font-weight: 500;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+label:focus-within {
+  color: var(--primary);
+  border-color: var(--primary);
+}

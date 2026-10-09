@@ -27,7 +27,7 @@ const PlaylistView = () => {
   ];
 
   const playlist = playlistContext.length > 0 ? playlistContext : [];
-
+  
   if (playlist.length === 0) {
     return null;
   }
@@ -35,7 +35,7 @@ const PlaylistView = () => {
   return (
     <>
       {playlist.length > 1 && (
-        <div>
+        <div className="bla">
           {playerState.metadataIndex + 1}/{playlist.length}
         </div>
       )}
@@ -44,13 +44,14 @@ const PlaylistView = () => {
         <button
           key={item.name}
           draggable
+          disabled={playerState.songs.length <= 0}
           onDragStart={(e) => item.onDragStart(e)}
         >
           <Icon iconName={item.name} />
         </button>
       ))}
-
-     {playlistContext.length > 1 ?( <button
+      
+      {playlistContext.length > 1 ?( <button
         onClick={() => {
           if (playerState.songs.length !== playlistContext.length) {
             const allSongIds = playlistContext
@@ -78,6 +79,10 @@ const PlaylistView = () => {
           : "Check all"}
       </button>) : <></>}
 
+<div className="list">
+
+     
+
       {!playerState.collectingPlaylist ? (
         playlist.map((song, index) => (
           <PlaylistItem key={song.id} song={song} index={index} />
@@ -85,6 +90,9 @@ const PlaylistView = () => {
       ) : (
         <></>
       )}
+
+
+</div>
     </>
   );
 };

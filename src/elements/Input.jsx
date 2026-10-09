@@ -1,7 +1,7 @@
 const Input = ({ text, classname, onChange, rangeValue, min, max, step, disabled}) => {
   return (
     <div className={classname}>
-      <label htmlFor="">{text || "N/A"}</label>
+      <label>{text || "N/A"}</label>
       <input
         type="range"
         name=""
