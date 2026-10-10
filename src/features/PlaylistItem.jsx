@@ -35,74 +35,75 @@ const PlaylistItem = ({ song, index }) => {
       },
     },
   ];
-
+  
   return (
-    <>
-      <li
-        draggable
-        data-index={index}
-        onDragStart={(e) => {
-          e.dataTransfer.setData(
-            "text/plain",
-            JSON.stringify({
-              song,
-              sourcePlaylistId: null,
-            }),
-          );
-        }}
-        onClick={() =>
-          setPlayerState((prev) => ({
-            ...prev,
-            metadataIndex: song.id,
-          }))
-        }
-        data-url={song.url}
-        value={song.url}
-        style={{
-          backgroundColor:
-            playlistContext[playerState.metadataIndex]?.id === song.id
-              ? "color-mix(in srgb, var(--primary) 18%, var(--surface))"
-              : "",
-          borderColor:
-            playlistContext[playerState.metadataIndex]?.id === song.id
-              ? "var(--primary)"
-              : "transparent",
-        }}
-      >
-        {song.name}
-      </li>
+   
+<div
+  className="song-item"
+  draggable
+  data-index={index}
+  data-url={song.url}
+  onDragStart={(e) => {
+    e.dataTransfer.setData(
+      "text/plain",
+      JSON.stringify({
+        song,
+        sourcePlaylistId: null,
+      }),
+    );
+  }}
+  onClick={() =>
+    setPlayerState((prev) => ({
+      ...prev,
+      metadataIndex: song.id,
+    }))
+  }
+  style={{
+    backgroundColor:
+      playlistContext[playerState.metadataIndex]?.id === song.id
+        ? "color-mix(in srgb, var(--primary) 18%, var(--surface))"
+        : "",
+    borderColor:
+      playlistContext[playerState.metadataIndex]?.id === song.id
+        ? "var(--primary)"
+        : "transparent",
+  }}
+>
+  <span className="song-name">{song.name}</span>
 
-      {playlistIcon.map((item) => (
-        <Button
-          classname={""}
-          onClick={item.onClick}
-          disabled={false}
-          iconName={item.name}
-        />
-      ))}
+  <div className="song-actions">
+    {playlistIcon.map((item) => (
+      <Button
+        key={item.name}
+        classname=""
+        onClick={item.onClick}
+        disabled={false}
+        iconName={item.name}
+      />
+    ))}
 
-      {playlistContext.length > 1 ? (
-        <input
-          type="checkbox"
-          checked={playerState.songs.includes(song.id)}
-          onChange={(e) => {
-            if (e.target.checked) {
-              setPlayerState((prev) => ({
-                ...prev,
-                songs: [...prev.songs, song.id],
-              }));
-            } else {
-              setPlayerState((prev) => ({
-                ...prev,
-                songs: prev.songs.filter((id) => id !== song.id),
-              }));
-            }
-          }}
-        />
-      ) : (
-        <></>
-      )}
-    </>
+    {playlistContext.length > 1 && (
+      <input
+        type="checkbox"
+        checked={playerState.songs.includes(song.id)}
+        onClick={(e) => e.stopPropagation()}
+        onChange={(e) => {
+          if (e.target.checked) {
+            setPlayerState((prev) => ({
+              ...prev,
+              songs: [...prev.songs, song.id],
+            }));
+          } else {
+            setPlayerState((prev) => ({
+              ...prev,
+              songs: prev.songs.filter((id) => id !== song.id),
+            }));
+          }
+        }}
+      />
+    )}
+  </div>
+</div>
   );
 };
 

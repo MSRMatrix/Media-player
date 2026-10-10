@@ -52,15 +52,15 @@ const Player = () => {
           volume={playerState.volume}
           playbackRate={playerState.playbackRate}
           onWaiting={() => console.log("test")}
-          onLoadedMetadata={(e) =>
+          onLoadedMetadata={(e) => {
             handleLoadedMetadata(
               e,
               setPlaylistContext,
               playerState,
               setPlayerState,
               playlistContext,
-            )
-          }
+            );
+          }}
           onDurationChange={(e) => {
             const duration = e.currentTarget.duration;
             setPlayerState((prev) => ({

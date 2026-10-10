@@ -8,15 +8,22 @@ export const handleLoadedMetadata = (
   const api = e.srcElement.api;
 
   const title = api?.videoTitle || "";
+  const url = e.currentTarget.src;
+
+  const urlObject = new URL(url);
+  const playlistId = urlObject.searchParams.get("list");
+
+  const youtubeUrl =
+  playlistId && playlistId !== "LL" && playlistId !== "WL"
+    ? `https://www.youtube.com/playlist?list=${playlistId}&index=1`
+    : null;
+    
 
   if (playerState.collectingPlaylist) {
     setPlaylistContext((prev) =>
       prev.map((item, index) =>
         index === playerState.metadataIndex
-          ? {
-              ...item,
-              name: title,
-            }
+          ? { ...item, name: title }
           : item,
       ),
     );
@@ -39,18 +46,26 @@ export const handleLoadedMetadata = (
     return;
   }
 
-  const playlist = api.playerInfo?.playlist;
+  // Zuerst die Playlist-Daten der API prüfen.
+  let playlist = api.playerInfo?.playlist;
+
+  // Falls keine Playlist vorhanden ist, die URL als Fallback prüfen.
+  if (!playlist && youtubeUrl) {
+    setPlaylistContext((prev) => ([{ ...prev, url: youtubeUrl }]));
+    return;
+  }
 
   if (!playlist) {
     setPlayerState((prev) => ({
       ...prev,
       play: true,
     }));
-    // setPlaylistContext((prev) => ({...prev, name: title}))
     return;
   }
 
-  const question = confirm("Do you want to copy the whole playlist?");
+  const question = confirm(
+    "Do you want to copy the whole playlist?",
+  );
 
   if (!question) {
     const videoId = api.playerInfo.videoData.video_id;
