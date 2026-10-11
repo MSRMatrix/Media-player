@@ -46,10 +46,8 @@ export const handleLoadedMetadata = (
     return;
   }
 
-  // Zuerst die Playlist-Daten der API prüfen.
   let playlist = api.playerInfo?.playlist;
 
-  // Falls keine Playlist vorhanden ist, die URL als Fallback prüfen.
   if (!playlist && youtubeUrl) {
     setPlaylistContext((prev) => ([{ ...prev, url: youtubeUrl }]));
     return;

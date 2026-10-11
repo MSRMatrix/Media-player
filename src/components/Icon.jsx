@@ -18,6 +18,11 @@ import {
   faLinkSlash,
   faStop,
   faGripLines,
+  faCheckDouble,
+  faXmark,
+  faHandBackFist,
+  faCircleChevronUp,
+  faCircleChevronDown
 } from "@fortawesome/free-solid-svg-icons";
 
 import {} from "@fortawesome/free-brands-svg-icons";
@@ -41,6 +46,11 @@ const iconMap = {
   faLinkSlash: faLinkSlash,
   faStop: faStop,
   faGripLines: faGripLines,
+  faCheckDouble: faCheckDouble,
+  faXmark: faXmark,
+faHandBackFist: faHandBackFist,
+  faCircleChevronUp: faCircleChevronUp,
+  faCircleChevronDown: faCircleChevronDown,
 };
 
 const Icon = ({ iconName }) => {

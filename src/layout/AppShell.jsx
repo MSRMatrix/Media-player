@@ -15,11 +15,14 @@ const AppShell = () => {
       </nav>
       <main>
         <section className="test">
+          <div>
           <Player />
+             <Outlet />
+          </div>
           <Lists />
+         
         </section>
         <section>
-          <Outlet />
         </section>
       </main>
       <footer>

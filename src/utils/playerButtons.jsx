@@ -115,7 +115,7 @@ export const createPlayerButtons = ({
         ...prev,
         playbackRate: Number(e.target.value),
       })),
-    min: 0,
+    min: 0.25,
     max: 2,
     step: 0.25,
   },

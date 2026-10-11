@@ -10,7 +10,7 @@ const PlaylistView = () => {
 
   const playlistIcon = [
     {
-      name: "faHandPointer",
+      name: "faHandBackFist",
       onDragStart: (e) => {
         const selectedSongs = playlistContext.filter((song) =>
           playerState.songs.includes(song.id),
@@ -35,7 +35,7 @@ const PlaylistView = () => {
   return (
     <>
       {playlist.length > 1 && (
-        <div className="bla">
+        <div>
           {playerState.metadataIndex + 1}/{playlist.length}
         </div>
       )}
@@ -44,6 +44,7 @@ const PlaylistView = () => {
         <button
           key={item.name}
           draggable
+          
           disabled={playerState.songs.length <= 0}
           onDragStart={(e) => item.onDragStart(e)}
         >
@@ -75,9 +76,8 @@ const PlaylistView = () => {
             }
           }}
         >
-          {playerState.songs.length === playlistContext.length
-            ? "Uncheck all"
-            : "Check all"}
+           <Icon iconName={playerState.songs.length === playlistContext.length
+            ? "faXmark" : "faCheckDouble"}/>
         </button>
       ) : (
         <></>
