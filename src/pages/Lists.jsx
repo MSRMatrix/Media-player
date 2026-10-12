@@ -58,9 +58,9 @@ const Lists = () => {
             </button> */}
           </h2>
 
-          {playlistContext.length > 1 ? (
+          
             <button
-              disabled={playerState.title !== playlist.title}
+              // disabled={playerState.title !== playlist.title}
               onClick={() => {
                 if (playerState.songs.length !== playlistContext.length) {
                   const allSongIds = playlistContext
@@ -91,9 +91,7 @@ const Lists = () => {
                 }
               />
             </button>
-          ) : (
-            <></>
-          )}
+         
 
           {playlistIcon.map((item) => (
             <button
@@ -167,7 +165,7 @@ const Lists = () => {
                     </button>
                   ))}
 
-                  {playlistContext.length > 1 && (
+                 
                     <input
                       type="checkbox"
                       checked={playerState.songs.includes(song.id)}
@@ -186,7 +184,6 @@ const Lists = () => {
                         }
                       }}
                     />
-                  )}
                 </div>
               </li>
             ))}
