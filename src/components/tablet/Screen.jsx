@@ -1,8 +1,8 @@
-const Screen = () => {
+const Screen = ({children}) => {
     return (
-        <>
-            Screen
-        </>
+        <div className="screen">
+            {children}
+        </div>
     )
 };
 

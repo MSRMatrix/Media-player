@@ -1,8 +1,8 @@
-const Frame = () => {
+const Frame = ({children}) => {
     return (
-        <>
-           Frame 
-        </>
+        <div className="frame">
+           {children} 
+        </div>
     )
 };
 

@@ -5,29 +5,39 @@ import Player from "../features/Player";
 import Lists from "../pages/Lists";
 import { useContext } from "react";
 import { ThemeContext } from "../context/ThemeCondext";
+import Statusbar from "../components/tablet/Statusbar";
+import Camera from "../components/tablet/Camera";
+import Frame from "../components/tablet/Frame";
+import Screen from "../components/tablet/Screen";
 
-const AppShell = () => { 
-  const {theme} = useContext(ThemeContext)
+const AppShell = () => {
+  const { theme } = useContext(ThemeContext);
   return (
     <div data-theme={theme}>
-      <nav>
-        <Navigation />
-      </nav>
-      <main>
-        <section className="test">
-          <div>
-          <Player />
-             <Outlet />
-          </div>
-          <Lists />
-         
-        </section>
-        <section>
-        </section>
-      </main>
-      <footer>
-        <Footer />
-      </footer>
+      <Frame>
+      <Statusbar>
+        <Camera />
+      </Statusbar>
+      
+        <Screen>
+          <nav>
+            <Navigation />
+          </nav>
+          <main>
+            <section className="test">
+              <div>
+                <Player />
+                <Outlet />
+              </div>
+              <Lists />
+            </section>
+          </main>
+        
+        <footer>
+          <Footer />
+        </footer>
+        </Screen>
+      </Frame>
     </div>
   );
 };

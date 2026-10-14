@@ -8,3 +8,8 @@
 @import "./elements/form.css";
 @import "./elements/list.css";
 @import "./elements/heading.css";
+
+@import "./tablet/screen.css";
+@import "./tablet/frame.css";
+@import "./tablet/statusbar.css";
+@import "./tablet/camera.css";
