@@ -1,5 +1,75 @@
-.camera{
-    /* width: 100px;
-    height: 100px; */
-    /* position: absolute; */
+.camera-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  background: transparent;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70px;
+    height: 35px;
+    background: #000;
+    border-radius: 0 0 18px 18px;
+    z-index: 1;
+  }
+}
+
+.camera {
+  width: 30px;
+  height: 30px;
+  position: relative;
+  z-index: 2;
+  border-radius: 50%;
+
+  background: radial-gradient(
+    circle at 35% 30%,
+    #333 0%,
+    #111 50%,
+    #000 100%
+  );
+
+  box-shadow:
+    inset 2px 2px 4px #555,
+    inset -2px -2px 4px #000,
+    0 1px 3px #000;
+
+  .lens {
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    border: 3px solid #777;
+    box-sizing: border-box;
+
+    background: radial-gradient(
+      circle at 35% 30%,
+      #52677f 0%,
+      #182b43 35%,
+      #05080e 75%,
+      #000 100%
+    );
+
+    box-shadow:
+      inset 1px 1px 2px #a0a7b0,
+      0 0 2px #000;
+  }
+
+  .linse::after {
+    content: "";
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    top: 2px;
+    left: 2px;
+    border-radius: 50%;
+    background: rgb(220 240 255 / 75%);
+    filter: blur(0.5px);
+  }
 }

@@ -1,4 +1,6 @@
 .statusbar{
-    background-color: brown;
+    background-color: black;
+    height: 40px;
     position: relative;
+    z-index: 1;
 }

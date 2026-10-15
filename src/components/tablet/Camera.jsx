@@ -1,8 +1,11 @@
 const Camera = () => {
     return (
+        <div className="camera-container">
         <div className="camera">
-            Camera
+            <div className="lens"></div>
+        </div>    
         </div>
+        
     )
 };
 
