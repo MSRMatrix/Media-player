@@ -1,6 +1,67 @@
-.statusbar{
-    background-color: black;
-    height: 40px;
-    position: relative;
-    z-index: 1;
+.statusbar {
+  position: relative;
+  z-index: 1;
+
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+
+  height: 40px;
+  padding: 0 18px;
+
+  background: #17191d;
+  color: #f5f5f5;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+
+  box-sizing: border-box;
+}
+
+.statusbar-left {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.statusbar-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.statusbar-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 9px;
+}
+
+.battery {
+  position: relative;
+  width: 19px;
+  height: 10px;
+  border: 1px solid #f5f5f5;
+  border-radius: 3px;
+  padding: 1px;
+  box-sizing: border-box;
+}
+
+.battery::after {
+  content: "";
+  position: absolute;
+  right: -3px;
+  top: 2px;
+  width: 2px;
+  height: 4px;
+  background: #f5f5f5;
+  border-radius: 0 1px 1px 0;
+}
+
+.battery-level {
+  display: block;
+  width: 65%;
+  height: 100%;
+  background: #f5f5f5;
+  border-radius: 1px;
 }

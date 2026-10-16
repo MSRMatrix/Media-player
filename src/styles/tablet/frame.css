@@ -1,3 +1,28 @@
-.frame{
-    border: 10px solid coral;
+
+.frame {
+  position: relative;
+  box-sizing: border-box;
+
+  width: 100%;
+  height: 100%;
+
+  padding: 10px;
+
+  background: linear-gradient(
+    135deg,
+    #50545b 0%,
+    #25282e 18%,
+    #17191d 50%,
+    #30343b 82%,
+    #555962 100%
+  );
+
+  border: 1px solid #656971;
+  border-radius: 32px;
+
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 8%),
+    inset 2px 2px 4px rgb(255 255 255 / 10%),
+    inset -3px -3px 6px rgb(0 0 0 / 55%),
+    0 15px 35px rgb(0 0 0 / 30%);
 }
