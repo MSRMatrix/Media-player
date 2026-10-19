@@ -1,3 +1,4 @@
+
 export function onEnded(
   playerRef,
   playerState,
@@ -9,7 +10,7 @@ export function onEnded(
     return;
   }
 
-  if (playlistContext.length <= 1) {
+  if (!playlistContext || playlistContext.length <= 1) {
     setPlayerState((prev) => ({
       ...prev,
       play: false,
@@ -18,16 +19,27 @@ export function onEnded(
   }
 
   if (playerState.shuffle) {
-    setPlayerState((prev) => ({
-      ...prev,
-      metadataIndex: Math.floor(Math.random() * playlistContext.length),
-    }));
+    setPlayerState((prev) => {
+      let nextIndex;
+
+      do {
+        nextIndex = Math.floor(
+          Math.random() * playlistContext.length
+        );
+      } while (nextIndex === prev.metadataIndex);
+
+      return {
+        ...prev,
+        metadataIndex: nextIndex,
+      };
+    });
 
     return;
   }
+
   setPlayerState((prev) => ({
     ...prev,
     metadataIndex:
-      prev.metadataIndex + 1 >= playlistContext.length ? 0 : prev + 1,
+      (prev.metadataIndex + 1) % playlistContext.length,
   }));
 }

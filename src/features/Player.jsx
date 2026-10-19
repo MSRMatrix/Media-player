@@ -39,6 +39,9 @@ const Player = () => {
     );
   }, [localeStorageContext.playlist]);
 
+  console.log(playerState.duration- 1);
+  
+
   return (
     <div>
       <div>

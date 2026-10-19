@@ -148,7 +148,7 @@ export const createPlayerButtons = ({
     text: durationProgress(playerState.progress, playerState.duration),
     rangeValue: playerState.progress,
     min: 0,
-    max: playerState.duration,
+    max: playerState.duration - 1,
     step: 0.1,
   },
   {
