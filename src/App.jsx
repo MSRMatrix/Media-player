@@ -5,7 +5,6 @@ import { PlaylistContext } from "./context/PlaylistContext";
 import Home from "./pages/Home";
 import Tutorial from "./pages/Tutorial";
 import Youtube from "./pages/Youtube";
-import NotFound from "./pages/NotFound";
 import { LocaleStorageContext } from "./context/LocaleStorageContext";
 import MediaInput from "./pages/MediaInput";
 import { PlayerContext } from "./context/PlayerContext";
@@ -65,6 +64,7 @@ function App() {
       children: [
         {
           index: true,
+          path: "*",
           element: <Home />,
         },
         {
@@ -95,10 +95,6 @@ function App() {
           element: <Youtube />,
         },
       ],
-    },
-    {
-      path: "*",
-      element: <NotFound />,
     },
   ]);
 

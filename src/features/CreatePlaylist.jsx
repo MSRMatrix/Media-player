@@ -1,6 +1,7 @@
 import { useContext, useEffect } from "react";
 import { LocaleStorageContext } from "../context/LocaleStorageContext";
 import Form from "../elements/Form";
+import { createPlaylist } from "../utils/createPlaylist";
 
 const CreatePlaylist = () => {
   const {
@@ -29,39 +30,11 @@ const CreatePlaylist = () => {
     );
   }, [localeStorageContext.playlist]);
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-
-    const value = e.target.elements[2].value.trim();
-
-    if (!value) {
-      return;
-    }
-
-    const findPlaylist = localeStorageContext.playlist.find(
-      (item) => item.title === value,
-    );
-
-    if (findPlaylist) {
-      alert("Playlist already exists");
-      return;
-    }
-
-    const newPlaylist = {
-      id: crypto.randomUUID(),
-      title: value,
-      songs: [],
-    };
-
-    setLocaleStorageContext((prev) => ({
-      ...prev,
-      playlist: [...prev.playlist, newPlaylist],
-    }));
-  };
+  
 
   return (
     <Form
-      submitFunction={onSubmit}
+      submitFunction={(e) => createPlaylist(e, localeStorageContext,setLocaleStorageContext)}
       text="Create new list"
       id="Create-new-list"
       className=""

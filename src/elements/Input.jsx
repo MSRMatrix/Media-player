@@ -1,9 +1,11 @@
-const Input = ({ text, classname, onChange, rangeValue, min, max, step, disabled}) => {
+const Input = ({ text, classname, onChange, rangeValue, min, max, step, disabled, type, checked, onClick}) => {
   return (
     <div className={classname}>
       <label>{text || "N/A"}</label>
       <input
-        type="range"
+        type={type}
+        checked={checked}
+        onClick={onClick}
         name=""
         id=""
         min={min}

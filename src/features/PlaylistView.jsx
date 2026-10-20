@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { PlaylistContext } from "../context/PlaylistContext";
 import PlaylistItem from "./PlaylistItem";
 import { PlayerContext } from "../context/PlayerContext";
-import Icon from "../components/Icon";
+import Button from "../elements/Button";
 
 const PlaylistView = () => {
   const { playerState, setPlayerState } = useContext(PlayerContext);
@@ -28,6 +28,28 @@ const PlaylistView = () => {
 
   const playlist = playlistContext.length > 0 ? playlistContext : [];
 
+  function onClick() {
+    if (playerState.songs.length !== playlistContext.length) {
+      const allSongIds = playlistContext
+        .map((song) => song.id)
+        .sort(
+          (a, b) =>
+            playlistContext.findIndex((song) => song.id === a) -
+            playlistContext.findIndex((song) => song.id === b),
+        );
+
+      setPlayerState((prev) => ({
+        ...prev,
+        songs: allSongIds,
+      }));
+    } else {
+      setPlayerState((prev) => ({
+        ...prev,
+        songs: [],
+      }));
+    }
+  }
+
   if (playlist.length === 0) {
     return null;
   }
@@ -41,44 +63,25 @@ const PlaylistView = () => {
       )}
 
       {playlistIcon.map((item) => (
-        <button
-          key={item.name}
-          draggable
-          
-          disabled={playerState.songs.length <= 0}
+        <Button
+          classname=""
           onDragStart={(e) => item.onDragStart(e)}
-        >
-          <Icon iconName={item.name} />
-        </button>
+          draggable={true}
+          key={item.name}
+          disabled={playerState.songs.length <= 0}
+          iconName={item.name}
+        />
       ))}
 
       {playlistContext.length > 1 ? (
-        <button
-          onClick={() => {
-            if (playerState.songs.length !== playlistContext.length) {
-              const allSongIds = playlistContext
-                .map((song) => song.id)
-                .sort(
-                  (a, b) =>
-                    playlistContext.findIndex((song) => song.id === a) -
-                    playlistContext.findIndex((song) => song.id === b),
-                );
-
-              setPlayerState((prev) => ({
-                ...prev,
-                songs: allSongIds,
-              }));
-            } else {
-              setPlayerState((prev) => ({
-                ...prev,
-                songs: [],
-              }));
-            }
-          }}
-        >
-           <Icon iconName={playerState.songs.length === playlistContext.length
-            ? "faXmark" : "faCheckDouble"}/>
-        </button>
+        <Button
+          onClick={onClick}
+          iconName={
+            playerState.songs.length === playlistContext.length
+              ? "faXmark"
+              : "faCheckDouble"
+          }
+        />
       ) : (
         <></>
       )}

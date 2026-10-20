@@ -41,6 +41,7 @@ const { playerState, setPlayerState } = useContext(PlayerContext);
           </Button>
         ) : (
           <Input
+          type={"range"}
             min={item.min}
             max={item.max}
             step={item.step}

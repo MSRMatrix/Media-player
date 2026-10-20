@@ -15,8 +15,4 @@
       path: "media-input",
       name: "Media Input",
     },
-    {
-      path: "youtube",
-      name: "Youtube",
-    },
   ];

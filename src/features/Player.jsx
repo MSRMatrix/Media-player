@@ -38,8 +38,6 @@ const Player = () => {
       JSON.stringify(localeStorageContext.playlist),
     );
   }, [localeStorageContext.playlist]);
-
-  console.log(playerState.duration- 1);
   
 
   return (
