@@ -17,3 +17,77 @@ html {
 html::-webkit-scrollbar {
     display: none;
 }
+
+
+
+.player {
+  width: min(100%, 900px);
+  margin: 40px auto;
+  padding: 16px;
+  background: #111318;
+  color: #f3f4f6;
+  border: 1px solid #292d36;
+  border-radius: 16px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.player-screen {
+  width: 100%;
+  background: #20232b;
+  border-radius: 10px;
+  overflow: hidden;
+  height: fit-content;
+}
+
+/* Bedienleiste unter dem Bildschirm */
+.player-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Buttons */
+.player-controls .button {
+  background: #292d36;
+  color: #f3f4f6;
+  border: 1px solid #393d48;
+  border-radius: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.player-controls .button:hover:not(:disabled) {
+  background: #393d48;
+  border-color: #8b7cff;
+}
+
+.player-controls .button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Range-Inputs */
+.player-controls input[type="range"] {
+  width: 100%;
+  accent-color: #8b7cff;
+  cursor: pointer;
+}
+
+.player-controls input[type="range"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+
+
+.player-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}

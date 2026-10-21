@@ -41,8 +41,8 @@ const Player = () => {
   
 
   return (
-    <div>
-      <div>
+    <div className="player">
+      <div className="player-screen">
         <ReactPlayer
           style={{ display: !playerState.collectingPlaylist ? "" : "none" }}
           ref={playerRef}
@@ -82,11 +82,13 @@ const Player = () => {
             onError(error);
           }}
         />
-
-        <PlaylistControls
+<div className="player-controls">
+  <PlaylistControls
           playerRef={playerRef}
           setPlaylistContext={setPlaylistContext}
         />
+</div>
+        
 
         <PlayerStatus />
       </div>

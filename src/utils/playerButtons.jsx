@@ -21,56 +21,18 @@ export const createPlayerButtons = ({
   setPlaylistContext,
 }) => [
   {
-    element: "button",
-    iconName: "faBackward",
-    disabled: playlistContext.length > 1 ? false : true,
-    id: "previous",
-    text: "Previous",
-    onClick: () => {
-      if (playerState.shuffle) {
-        setPlayerState((prev) => ({
-          ...prev,
-          metadataIndex: Math.floor(Math.random() * playlistContext.length),
-        }));
-        return;
-      }
-
-      setPlayerState((prev) => ({
-        ...prev,
-        metadataIndex:
-          prev.metadataIndex === 0
-            ? playlistContext.length - 1
-            : prev.metadataIndex - 1,
-      }));
-    },
-  },
-  {
-    element: "button",
-    iconName: !playerState.play ? "faPlay" : "faPause",
+    element: "input",
+    id: "progress",
     disabled:
       playlistContext[playerState.metadataIndex]?.url || playlistContext?.url
         ? false
         : true,
-    id: !playerState.play ? "play" : "pause",
-    text: !playerState.play ? "Play" : "Pause",
-    onClick: () =>
-      setPlayerState((prev) => ({
-        ...prev,
-        play: !prev.play,
-      })),
+    text: durationProgress(playerState.progress, playerState.duration),
+    rangeValue: playerState.progress,
+    min: 0,
+    max: playerState.duration - 1,
+    step: 0.1,
   },
-  {
-    element: "button",
-    iconName: "faStop",
-    disabled: playlistContext.length > 0 ? false : true,
-    id: "stop",
-    text: "Stop",
-    onClick: () => {
-      setPlaylistContext([]);
-      setPlayerState((prev) => ({ ...prev, mode: "", title: "" }));
-    },
-  },
-
   {
     element: "button",
     iconName: "faForward",
@@ -94,6 +56,58 @@ export const createPlayerButtons = ({
           }));
     },
   },
+  {
+    element: "button",
+    iconName: !playerState.play ? "faPlay" : "faPause",
+    disabled:
+      playlistContext[playerState.metadataIndex]?.url || playlistContext?.url
+        ? false
+        : true,
+    id: !playerState.play ? "play" : "pause",
+    text: !playerState.play ? "Play" : "Pause",
+    onClick: () =>
+      setPlayerState((prev) => ({
+        ...prev,
+        play: !prev.play,
+      })),
+  },
+
+  {
+    element: "button",
+    iconName: "faStop",
+    disabled: playlistContext.length > 0 ? false : true,
+    id: "stop",
+    text: "Stop",
+    onClick: () => {
+      setPlaylistContext([]);
+      setPlayerState((prev) => ({ ...prev, mode: "", title: "" }));
+    },
+  },
+  {
+    element: "button",
+    iconName: "faBackward",
+    disabled: playlistContext.length > 1 ? false : true,
+    id: "previous",
+    text: "Previous",
+    onClick: () => {
+      if (playerState.shuffle) {
+        setPlayerState((prev) => ({
+          ...prev,
+          metadataIndex: Math.floor(Math.random() * playlistContext.length),
+        }));
+        return;
+      }
+
+      setPlayerState((prev) => ({
+        ...prev,
+        metadataIndex:
+          prev.metadataIndex === 0
+            ? playlistContext.length - 1
+            : prev.metadataIndex - 1,
+      }));
+    },
+  },
+
   {
     element: "input",
     id: "volume",
@@ -138,19 +152,7 @@ export const createPlayerButtons = ({
         volume: prev.volume === 0 ? 0.2 : 0,
       })),
   },
-  {
-    element: "input",
-    id: "progress",
-    disabled:
-      playlistContext[playerState.metadataIndex]?.url || playlistContext?.url
-        ? false
-        : true,
-    text: durationProgress(playerState.progress, playerState.duration),
-    rangeValue: playerState.progress,
-    min: 0,
-    max: playerState.duration - 1,
-    step: 0.1,
-  },
+
   {
     element: "button",
     iconName: playerState.loop ? "faRepeat" : "faBan",

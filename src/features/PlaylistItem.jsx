@@ -3,6 +3,7 @@ import { PlaylistContext } from "../context/PlaylistContext";
 import { PlayerContext } from "../context/PlayerContext";
 import Button from "../elements/Button";
 import Input from "../elements/Input";
+import { checkedHandler } from "../utils/checkedHandler";
 
 const PlaylistItem = ({ song, index }) => {
   const { playlistContext, setPlaylistContext } = useContext(PlaylistContext);
@@ -36,20 +37,6 @@ const PlaylistItem = ({ song, index }) => {
       },
     },
   ];
-
-  function onChange(e) {
-    if (e.target.checked) {
-      setPlayerState((prev) => ({
-        ...prev,
-        songs: [...prev.songs, song.id],
-      }));
-    } else {
-      setPlayerState((prev) => ({
-        ...prev,
-        songs: prev.songs.filter((id) => id !== song.id),
-      }));
-    }
-  }
 
   return (
     <div
@@ -101,7 +88,7 @@ const PlaylistItem = ({ song, index }) => {
             type={"checkbox"}
             checked={playerState.songs.includes(song.id)}
             onClick={(e) => e.stopPropagation()}
-            onChange={onChange}
+            onChange={(e) => checkedHandler(e, setPlayerState, song)}
           />
         )}
       </div>
