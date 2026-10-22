@@ -8,6 +8,7 @@ export const handleLoadedMetadata = (
   const api = e.srcElement.api;
 
   const title = api?.videoTitle || "";
+  
   const url = e.currentTarget.src;
 
   const urlObject = new URL(url);
@@ -17,7 +18,12 @@ export const handleLoadedMetadata = (
   playlistId && playlistId !== "LL" && playlistId !== "WL"
     ? `https://www.youtube.com/playlist?list=${playlistId}&index=1`
     : null;
-    
+
+    setPlaylistContext((prev) => ({
+      ...prev,
+      name: title
+    }));
+
 
   if (playerState.collectingPlaylist) {
     setPlaylistContext((prev) =>
@@ -56,6 +62,7 @@ export const handleLoadedMetadata = (
   if (!playlist) {
     setPlayerState((prev) => ({
       ...prev,
+      name: title,
       play: true,
     }));
     return;

@@ -91,6 +91,7 @@ const Player = () => {
         
 
         <PlayerStatus />
+        {/* Status muss noch angepasst werden */}
       </div>
     </div>
   );
