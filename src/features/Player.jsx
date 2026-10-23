@@ -38,7 +38,6 @@ const Player = () => {
       JSON.stringify(localeStorageContext.playlist),
     );
   }, [localeStorageContext.playlist]);
-  
 
   return (
     <div className="player">
@@ -82,13 +81,12 @@ const Player = () => {
             onError(error);
           }}
         />
-<div className="player-controls">
-  <PlaylistControls
-          playerRef={playerRef}
-          setPlaylistContext={setPlaylistContext}
-        />
-</div>
-        
+        <div className="player-controls">
+          <PlaylistControls
+            playerRef={playerRef}
+            setPlaylistContext={setPlaylistContext}
+          />
+        </div>
 
         <PlayerStatus />
         {/* Status muss noch angepasst werden */}

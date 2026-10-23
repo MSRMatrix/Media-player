@@ -36,7 +36,7 @@ export const createPlayerButtons = ({
   {
     element: "button",
     iconName: "faForward",
-    disabled: playlistContext.length > 1 ? false : true,
+    disabled: Object.keys(playlistContext).length > 1 ? false : true,
     id: "next",
     text: "Next",
     onClick: () => {
@@ -75,7 +75,7 @@ export const createPlayerButtons = ({
   {
     element: "button",
     iconName: "faStop",
-    disabled: playlistContext.length > 0 ? false : true,
+     disabled: Object.keys(playlistContext).length > 0 ? false : true,
     id: "stop",
     text: "Stop",
     onClick: () => {
@@ -86,7 +86,7 @@ export const createPlayerButtons = ({
   {
     element: "button",
     iconName: "faBackward",
-    disabled: playlistContext.length > 1 ? false : true,
+    disabled: Object.keys(playlistContext).length > 1 ? false : true,
     id: "previous",
     text: "Previous",
     onClick: () => {

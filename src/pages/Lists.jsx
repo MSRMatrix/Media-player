@@ -9,6 +9,7 @@ import CreatePlaylist from "../features/CreatePlaylist";
 
 const Lists = () => {
   const [dropPosition, setDropPosition] = useState(null);
+  const [expandedPlaylists, setExpandedPlaylists] = useState(new Set());
 
   const { localeStorageContext, setLocaleStorageContext } =
     useContext(LocaleStorageContext);
@@ -16,6 +17,20 @@ const Lists = () => {
   const { playlistContext, setPlaylistContext } = useContext(PlaylistContext);
 
   const { playerState, setPlayerState } = useContext(PlayerContext);
+
+  const togglePlaylist = (playlistId) => {
+    setExpandedPlaylists((prev) => {
+      const next = new Set(prev);
+
+      if (next.has(playlistId)) {
+        next.delete(playlistId);
+      } else {
+        next.add(playlistId);
+      }
+
+      return next;
+    });
+  };
 
   const playlistIcon = [
     {
@@ -35,41 +50,29 @@ const Lists = () => {
     },
   ];
 
-  // Größe der Lieder anpassen, einen Scrollbalken einfügen und die Listen eine einheiltlichen Größe geben
-
   return (
     <div className="playlists">
       <CreatePlaylist />
 
-      {localeStorageContext.playlist.map((playlist) => (
-        <div
-          className="list"
-          key={playlist.id}
-          data-playlist-id={playlist.id}
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={(e) =>
-            onDrop(e, setLocaleStorageContext, playlist, dropPosition)
-          }
-        >
-          <h2>
-            {playlist.title}
-            {/* <button onClick={() => true/false}>
-            <Icon iconName={"faCircleChevronUp" : "faCircleChevronDown"}/>  
-            </button> */}
-          </h2>
+      {localeStorageContext.playlist.map((playlist) => {
+        const isExpanded = expandedPlaylists.has(playlist.id);
 
-          
+        return (
+          <div
+            className="list"
+            key={playlist.id}
+            data-playlist-id={playlist.id}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) =>
+              onDrop(e, setLocaleStorageContext, playlist, dropPosition)
+            }
+          >
+            <h2>{playlist.title}</h2>
+
             <button
-              // disabled={playerState.title !== playlist.title}
               onClick={() => {
                 if (playerState.songs.length !== playlistContext.length) {
-                  const allSongIds = playlistContext
-                    .map((song) => song.id)
-                    .sort(
-                      (a, b) =>
-                        playlistContext.findIndex((song) => song.id === a) -
-                        playlistContext.findIndex((song) => song.id === b),
-                    );
+                  const allSongIds = playlistContext.map((song) => song.id);
 
                   setPlayerState((prev) => ({
                     ...prev,
@@ -91,81 +94,98 @@ const Lists = () => {
                 }
               />
             </button>
-         
 
-          {playlistIcon.map((item) => (
-            <button
-              key={item.name}
-              draggable
-              disabled={playerState.songs.length <= 0}
-              onDragStart={(e) => item.onDragStart(e)}
-            >
-              <Icon iconName={item.name} />
-            </button>
-          ))}
-          {/* Ganze Playlist laden */}
-
-          <button
-            disabled={playlist.songs.length <= 0}
-            onClick={() => {
-              setPlaylistContext(playlist.songs);
-
-              setPlayerState((prev) => ({
-                ...prev,
-                title: playlist.title,
-                metadataIndex: 0,
-                mode: "",
-              }));
-            }}
-          >
-            <Icon iconName="faHandPointer" />
-          </button>
-
-          <ul className="playlist-list">
-            {playlist.songs.map((song, index) => (
-              <li
-                key={song.id}
-                className="song-item"
-                onClick={() => {
-                  setPlaylistContext(playlist.songs);
-
-                  setPlayerState((prev) => ({
-                    ...prev,
-                    title: playlist.title,
-                    metadataIndex: index,
-                    mode: "",
-                  }));
-                }}
-                onDragOver={(e) => onDragOver(e, index, setDropPosition)}
-                style={{
-                  backgroundColor:
-                    playlistContext[playerState.metadataIndex]?.id === song.id
-                      ? "color-mix(in srgb, var(--primary) 18%, var(--surface))"
-                      : "",
-                  borderColor:
-                    playlistContext[playerState.metadataIndex]?.id === song.id
-                      ? "var(--primary)"
-                      : "transparent",
-                }}
+            {playlistIcon.map((item) => (
+              <button
+                key={item.name}
+                draggable
+                disabled={playerState.songs.length <= 0}
+                onDragStart={(e) => item.onDragStart(e)}
               >
-                <span className="song-name">{song.name}</span>
+                <Icon iconName={item.name} />
+              </button>
+            ))}
 
-                <div
-                  className="song-actions"
-                  onClick={(e) => e.stopPropagation()}
+            <button
+              disabled={playlist.songs.length <= 0}
+              onClick={() => {
+                setPlaylistContext(playlist.songs);
+
+                setPlayerState((prev) => ({
+                  ...prev,
+                  title: playlist.title,
+                  metadataIndex: 0,
+                  mode: "",
+                }));
+              }}
+            >
+              <Icon iconName="faHandPointer" />
+            </button>
+
+            <button
+              type="button"
+              aria-expanded={isExpanded}
+              onClick={() => togglePlaylist(playlist.id)}
+            >
+              <Icon
+                iconName={
+                  isExpanded
+                    ? "faCircleChevronUp"
+                    : "faCircleChevronDown"
+                }
+              />
+              {isExpanded ? "Playlist schließen" : "Playlist öffnen"}
+            </button>
+
+            <ul
+              className="playlist-list"
+              style={{ display: isExpanded ? "block" : "none" }}
+            >
+              {playlist.songs.map((song, index) => (
+                <li
+                  key={song.id}
+                  className="song-item"
+                  onClick={() => {
+                    setPlaylistContext(playlist.songs);
+
+                    setPlayerState((prev) => ({
+                      ...prev,
+                      title: playlist.title,
+                      metadataIndex: index,
+                      mode: "",
+                    }));
+                  }}
+                  onDragOver={(e) => onDragOver(e, index, setDropPosition)}
+                  style={{
+                    backgroundColor:
+                      playlistContext[playerState.metadataIndex]?.id === song.id
+                        ? "color-mix(in srgb, var(--primary) 18%, var(--surface))"
+                        : "",
+                    borderColor:
+                      playlistContext[playerState.metadataIndex]?.id === song.id
+                        ? "var(--primary)"
+                        : "transparent",
+                  }}
                 >
-                  {listArray({ setLocaleStorageContext }).map((action) => (
-                    <button
-                      key={action.iconName}
-                      draggable={action.draggable}
-                      onClick={() => action.onClick(playlist, song)}
-                      onDragStart={(e) => action.onDragStart(e, song, playlist)}
-                    >
-                      <Icon iconName={action.iconName} />
-                    </button>
-                  ))}
+                  <span className="song-name">{song.name}</span>
 
-                 
+                  <div
+                    className="song-actions"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {listArray({ setLocaleStorageContext }).map((action) => (
+                      <button
+                        key={action.iconName}
+                        draggable={action.draggable}
+                        onClick={() => action.onClick(playlist, song)}
+                        onDragStart={(e) =>
+                          action.onDragStart(e, song, playlist)
+                        }
+                      >
+                        <Icon iconName={action.iconName} />
+                      </button>
+                    ))}
+
                     <input
                       type="checkbox"
                       checked={playerState.songs.includes(song.id)}
@@ -184,12 +204,13 @@ const Lists = () => {
                         }
                       }}
                     />
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      })}
     </div>
   );
 };
