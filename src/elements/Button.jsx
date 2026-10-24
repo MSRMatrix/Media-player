@@ -7,6 +7,9 @@ const Button = ({
   iconName,
   onDragStart,
   draggable,
+  isExpanded,
+  text,
+  value
 }) => {
   return (
     <button
@@ -15,8 +18,10 @@ const Button = ({
       onClick={onClick}
       onDragStart={onDragStart}
       draggable={draggable}
+      aria-expanded={isExpanded}
+      value={value}
     >
-      <Icon iconName={iconName} />
+     {iconName ? <Icon iconName={iconName} /> : text}
     </button>
   );
 };

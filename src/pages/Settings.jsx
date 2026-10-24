@@ -1,5 +1,6 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { settingsArray } from "../config/settingsArray";
+import Button from "../elements/Button";
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -13,14 +14,13 @@ const Settings = () => {
     <>
       <div>
         {settingsArray.map((item) => (
-          <button
-            key={item.name}
+          <Button 
+          key={item.name}
             disabled={location.pathname === `/settings/${item.path}`}
             value={item.path}
             onClick={(e) => settingsFunction(e)}
-          >
-            {item.name}
-          </button>
+            text={item.name}
+          />
         ))}
       </div>
 

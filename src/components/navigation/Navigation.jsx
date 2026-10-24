@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { navArray } from "../../config/navArray";
 import { PlayerContext } from "../../context/PlayerContext";
 import { PlaylistContext } from "../../context/PlaylistContext";
+import Button from "../../elements/Button";
 
 const Navigation = () => {
   const navigate = useNavigate();
@@ -25,14 +26,13 @@ const Navigation = () => {
     <>
       <div>
         {navArray.map((item) => (
-          <button
+          <Button
             key={item.name}
             disabled={location.pathname === `/${item.path}`}
             value={item.path}
             onClick={(e) => navigateFunction(e)}
-          >
-            {item.name}
-          </button>
+            text={item.name}
+          />
         ))}
       </div>
     </>

@@ -1,11 +1,12 @@
 import { useContext, useState } from "react";
 import { LocaleStorageContext } from "../context/LocaleStorageContext";
 import { onDragOver, onDrop } from "../utils/dragNDrop";
-import Icon from "../components/Icon";
 import { PlaylistContext } from "../context/PlaylistContext";
 import { PlayerContext } from "../context/PlayerContext";
 import { listArray } from "../config/listArray";
 import CreatePlaylist from "../features/CreatePlaylist";
+import Button from "../elements/Button";
+import Input from "../elements/Input";
 
 const Lists = () => {
   const [dropPosition, setDropPosition] = useState(null);
@@ -69,7 +70,7 @@ const Lists = () => {
           >
             <h2>{playlist.title}</h2>
 
-            <button
+            <Button
               onClick={() => {
                 if (playerState.songs.length !== playlistContext.length) {
                   const allSongIds = playlistContext.map((song) => song.id);
@@ -85,28 +86,25 @@ const Lists = () => {
                   }));
                 }
               }}
-            >
-              <Icon
-                iconName={
-                  playerState.songs.length === playlistContext.length
-                    ? "faXmark"
-                    : "faCheckDouble"
-                }
-              />
-            </button>
+              iconName={
+                playerState.songs.length === playlistContext.length
+                  ? "faXmark"
+                  : "faCheckDouble"
+              }
+            />
 
             {playlistIcon.map((item) => (
-              <button
+              <Button
                 key={item.name}
-                draggable
+                iconName={item.name}
                 disabled={playerState.songs.length <= 0}
                 onDragStart={(e) => item.onDragStart(e)}
-              >
-                <Icon iconName={item.name} />
-              </button>
+                draggable={true}
+              />
             ))}
 
-            <button
+            <Button
+              iconName={"faHandPointer"}
               disabled={playlist.songs.length <= 0}
               onClick={() => {
                 setPlaylistContext(playlist.songs);
@@ -118,24 +116,16 @@ const Lists = () => {
                   mode: "",
                 }));
               }}
-            >
-              <Icon iconName="faHandPointer" />
-            </button>
+            />
 
-            <button
-              type="button"
-              aria-expanded={isExpanded}
+            <Button
+              type={"button"}
               onClick={() => togglePlaylist(playlist.id)}
-            >
-              <Icon
-                iconName={
-                  isExpanded
-                    ? "faCircleChevronUp"
-                    : "faCircleChevronDown"
-                }
-              />
-              {isExpanded ? "Playlist schließen" : "Playlist öffnen"}
-            </button>
+              isExpanded={isExpanded}
+              iconName={
+                isExpanded ? "faCircleChevronUp" : "faCircleChevronDown"
+              }
+            />
 
             <ul
               className="playlist-list"
@@ -174,20 +164,19 @@ const Lists = () => {
                     onClick={(e) => e.stopPropagation()}
                   >
                     {listArray({ setLocaleStorageContext }).map((action) => (
-                      <button
+                      <Button
+                        iconName={action.iconName}
                         key={action.iconName}
                         draggable={action.draggable}
                         onClick={() => action.onClick(playlist, song)}
                         onDragStart={(e) =>
                           action.onDragStart(e, song, playlist)
                         }
-                      >
-                        <Icon iconName={action.iconName} />
-                      </button>
+                      />
                     ))}
 
-                    <input
-                      type="checkbox"
+                    <Input
+                      type={"checkbox"}
                       checked={playerState.songs.includes(song.id)}
                       onClick={(e) => e.stopPropagation()}
                       onChange={(e) => {
